@@ -23,12 +23,12 @@ typedef struct seqinfo* p_seqinfo;
  * @field seq   the sequence
  * @field len   length of the sequence
  */
-struct sequence {
-    p_seqinfo info;
+struct sdb_sequence {
+    p_seqinfo* info;
     char* seq;
     long len;
 };
 
-typedef struct sequence* p_sequence;
+typedef struct sdb_sequence* p_sdb_sequence;
 
 #endif /* SDB_DATATYPES_H_ */

@@ -15,7 +15,14 @@
 #include "util.h"
 
 FILE* out_file;
+/* Describes, if the DB sequences should be translated prior to the alignments.
+ * One of: 0 - 4
+ * @see sdb_init_symbol_translation in libsdb.h */
 int symtype;
+/* Describes which strands are used in the alignments
+ * One of: 1 - 3
+ * @see sdb_init_symbol_translation in libsdb.h */
+int query_strands;
 
 void ffatal(const char * format, ...) {
     if (format) {
