@@ -88,19 +88,10 @@ static char d_translate[16 * 16 * 16];
 
 char remap[] = { 2, 1, 3, 0 };
 
-static char * revcompl(char * seq, long len) {
-    char * rc = (char *) xmalloc(len + 1);
-    for (long i = 0; i < len; i++)
-        rc[i] = ntcompl[(int) (seq[len - 1 - i])];
-    rc[len] = 0;
-    return rc;
-}
-
 static void create_translate_table(long tableno, char * table) {
     /* initialise translation table */
 
     // TODO understand this !!!!
-
     for (long a = 0; a < 16; a++) {
         for (long b = 0; b < 16; b++) {
             for (long c = 0; c < 16; c++) {
@@ -109,8 +100,10 @@ static void create_translate_table(long tableno, char * table) {
                 for (long i = 0; i < 4; i++) {
                     for (long j = 0; j < 4; j++) {
                         for (long k = 0; k < 4; k++) {
-                            if ((a & (1 << i)) && (b & (1 << j)) && (c & (1 << k))) {
-                                long codon = remap[i] * 16 + remap[j] * 4 + remap[k];
+                            if ((a & (1 << i)) && (b & (1 << j))
+                                    && (c & (1 << k))) {
+                                long codon = remap[i] * 16 + remap[j] * 4
+                                        + remap[k];
 
                                 char x = code[tableno - 1][codon];
 
@@ -219,6 +212,22 @@ void us_translate_sequence(int db_sequence, char * dna, long dlen,
     *plenp = plen;
 }
 
+/**
+ * Computes the reverse complement of the input sequence. If the input sequence
+ * is empty, the function returns 0.
+ *
+ * @param seq   the sequence to reverse complement
+ * @param len   the length of the sequence
+ * @return      the reverse complement or 0 in case of an empty sequence
+ */
 char* us_revcompl(char* seq, long len) {
-    return revcompl(seq, len);
+    if(!len) {
+        return 0;
+    }
+
+    char * rc = (char *) xmalloc(len + 1);
+    for (long i = 0; i < len; i++)
+        rc[i] = ntcompl[(int) (seq[len - 1 - i])];
+    rc[len] = 0;
+    return rc;
 }

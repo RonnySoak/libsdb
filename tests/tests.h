@@ -11,5 +11,6 @@
 #include <check.h>
 
 void addDatabaseTC(Suite *s);
+void addUtilSequenceTC(Suite *s);
 
 #endif /* CHECK_LIBORSA_H_ */
