@@ -19,6 +19,7 @@
 
 extern int symtype;
 extern int query_strands;
+extern int db_gencode;
 
 void * xmalloc(size_t size);
 void * xrealloc(void *ptr, size_t size);

@@ -12,7 +12,6 @@
 typedef struct seqinfo_s seqinfo_t;
 
 extern char map_ncbi_nt16[256];
-extern char* code[23];
 extern const char * sym_ncbi_aa;
 
 extern char* us_revcompl(char* seq, long len);
@@ -60,7 +59,7 @@ void ck_converted_prot_eq(char* ref, char* protp, int plen) {
 START_TEST (test_translate_query_RNA)
     {
         int codeno = 3;
-        us_init_translation(codeno, 3);
+        us_init_translation(codeno, 1);
 
         char* dna = "AUGCCCAAGCUGAAUAGCGUAGAGGGGUUUUCAUCAUUUGAGGACGAUGUAUAA";
         int dlen = strlen(dna);
@@ -83,7 +82,7 @@ START_TEST (test_translate_query_RNA)
 START_TEST (test_translate_query)
     {
         int codeno = 3;
-        us_init_translation(codeno, 3);
+        us_init_translation(codeno, 1);
 
         char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
         int dlen = strlen(dna);
@@ -143,7 +142,7 @@ START_TEST (test_translate_query)
 START_TEST (test_translate_query_DNA)
     {
         int codeno = 3;
-        us_init_translation(codeno, 3);
+        us_init_translation(codeno, 1);
 
         char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
         int dlen = strlen(dna);
@@ -165,7 +164,26 @@ START_TEST (test_translate_query_DNA)
 
 START_TEST (test_translate_db)
     {
+        int codeno = 3;
+        us_init_translation(1, codeno);
 
+        char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
+        int dlen = strlen(dna);
+        char* protp;
+        long plen;
+
+        char conv_dna[dlen + 1];
+        for (int i = 0; i < dlen; i++) {
+            conv_dna[i] = map_ncbi_nt16[(int) dna[i]];
+        }
+        conv_dna[dlen] = 0;
+
+        // translate it as a db sequence, using the db translation table
+        us_translate_sequence(1, conv_dna, dlen, 0, 0, &protp, &plen);
+
+        ck_assert_int_eq(18, plen);
+        ck_converted_prot_eq("MPKTNSVEGFSSFEDDV*", protp, plen);
+        free(protp);
     }END_TEST
 
 void addUtilSequenceTC(Suite *s) {

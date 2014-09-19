@@ -27,7 +27,7 @@ struct sdb_sequence {
     p_seqinfo* info;
     char* seq;
     long len;
-};
+}sdb_sequence;
 
 typedef struct sdb_sequence* p_sdb_sequence;
 

@@ -6,7 +6,7 @@
  */
 #include "util.h"
 
-char map_ncbi_aa[256] =
+const char map_ncbi_aa[256] =
         {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -25,7 +25,7 @@ char map_ncbi_aa[256] =
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
         };
-char map_ncbi_nt4[256] =
+const char map_ncbi_nt4[256] =
         {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -45,7 +45,7 @@ char map_ncbi_nt4[256] =
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
         };
 
-char map_ncbi_nt16[256] =
+const char map_ncbi_nt16[256] =
         {
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
                 -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -92,7 +92,7 @@ const char * gencode_names[23] =
                 "Thraustochytrium Mitochondrial Code"
         };
 
-char * code[23] =
+const char * code[23] =
         {
                 "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                 "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG",
@@ -124,15 +124,15 @@ const char * sym_ncbi_nt16 = "-acmgrsvtwyhkdbn################";
 const char * sym_ncbi_nt16u = "-ACMGRSVTWYHKDBN################";
 const char * sym_ncbi_aa = "-ABCDEFGHIKLMNPQRSTVWXYZU*OJ####";
 
-static char ntcompl[16] =
+static const char ntcompl[16] =
         { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };
 
 static char q_translate[16 * 16 * 16];
 static char d_translate[16 * 16 * 16];
 
-char remap[] = { 2, 1, 3, 0 };
+static const char remap[] = { 2, 1, 3, 0 };
 
-static void create_translate_table(long tableno, char * table) {
+static void create_translate_table(int tableno, char * table) {
     /* initialise translation table */
 
     // TODO understand this !!!!
@@ -212,7 +212,7 @@ static void create_translate_table(long tableno, char * table) {
 #endif
 }
 
-void us_init_translation(long qtableno, long dtableno) {
+void us_init_translation(int qtableno, int dtableno) {
     create_translate_table(qtableno, q_translate);
     create_translate_table(dtableno, d_translate);
 }
@@ -229,6 +229,7 @@ void us_translate_sequence(int db_sequence, char * dna, long dlen,
     long plen = (dlen - frame) / 3;
     char * prot = (char*) xmalloc(1 + plen);
 
+    // forward strand
     if (strand == 0) {
         pos = frame;
         while (ppos < plen) {
@@ -240,6 +241,7 @@ void us_translate_sequence(int db_sequence, char * dna, long dlen,
             prot[ppos++] = ttable[c];
         }
     }
+    // complement strand, done in reverse complement
     else {
         pos = dlen - 1 - frame;
         while (ppos < plen) {
@@ -270,7 +272,7 @@ char* us_revcompl(char* seq, long len) {
         return 0;
     }
 
-    char * rc = (char *) xmalloc(len + 1);
+    char* rc = (char *) xmalloc(len + 1);
     for (long i = 0; i < len; i++)
         rc[i] = ntcompl[(int) (seq[len - 1 - i])];
     rc[len] = 0;

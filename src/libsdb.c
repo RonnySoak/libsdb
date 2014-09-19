@@ -18,6 +18,7 @@
 extern char* us_revcompl(char* seq, long len);
 extern void us_translate_sequence(int db_sequence, char * dna, long dlen,
         long strand, long frame, char ** protp, long * plenp);
+extern void us_init_translation(int qtableno, int dtableno);
 
 // #############################################################################
 // Data types
@@ -34,9 +35,12 @@ void sdb_init_fasta(char* fasta_file_name) {
     // TODO
 }
 
-void sdb_init_symbol_translation(int type, int nr_strands) {
+void sdb_init_symbol_translation(int type, int nr_strands, int db_gencode,
+        int q_gencode) {
     symtype = type;
     query_strands = nr_strands;
+
+    us_init_translation(q_gencode, db_gencode);
 }
 
 p_sdb_sequence sdb_getnextsequence() {

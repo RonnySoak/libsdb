@@ -23,6 +23,7 @@ int symtype;
  * One of: 1 - 3
  * @see sdb_init_symbol_translation in libsdb.h */
 int query_strands;
+int db_gencode;
 
 void ffatal(const char * format, ...) {
     if (format) {

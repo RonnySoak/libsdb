@@ -56,7 +56,8 @@ void sdb_init_fasta(char* fasta_file_name);
  *
  * TODO add doc + list of constants
  */
-void sdb_init_symbol_translation(int type, int strands);
+void sdb_init_symbol_translation(int type, int strands, int db_gencode,
+        int q_gencode);
 
 p_sdb_sequence sdb_getnextsequence();
 
