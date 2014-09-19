@@ -8,15 +8,15 @@
 #include "tests.h"
 
 #include "../src/util.h"
+#include "../src/sdb_datatypes.h"
 
-typedef struct seqinfo_s seqinfo_t;
 
 extern void db_read(const char * filename);
 extern unsigned long db_getsequencecount();
 extern unsigned long db_getnucleotidecount();
 extern unsigned long db_getlongestheader();
 extern unsigned long db_getlongestsequence();
-extern seqinfo_t * db_getseqinfo(unsigned long seqno);
+extern p_seqinfo db_getseqinfo(unsigned long seqno);
 extern char * db_getsequence(unsigned long seqno);
 extern void db_getsequenceandlength(unsigned long seqno, char ** address,
         long * length);

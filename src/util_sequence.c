@@ -223,7 +223,6 @@ void us_translate_sequence(int db_sequence, char * dna, long dlen,
 
     char* ttable = (db_sequence) ? d_translate : q_translate;
 
-
     long pos, c;
     long ppos = 0;
     long plen = (dlen - frame) / 3;

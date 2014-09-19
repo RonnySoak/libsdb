@@ -58,8 +58,7 @@ void ck_converted_prot_eq(char* ref, char* protp, int plen) {
 
 START_TEST (test_translate_query_RNA)
     {
-        int codeno = 3;
-        us_init_translation(codeno, 1);
+        us_init_translation(3, 1);
 
         char* dna = "AUGCCCAAGCUGAAUAGCGUAGAGGGGUUUUCAUCAUUUGAGGACGAUGUAUAA";
         int dlen = strlen(dna);
@@ -81,8 +80,7 @@ START_TEST (test_translate_query_RNA)
 
 START_TEST (test_translate_query)
     {
-        int codeno = 3;
-        us_init_translation(codeno, 1);
+        us_init_translation(3, 1);
 
         char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
         int dlen = strlen(dna);
@@ -141,8 +139,7 @@ START_TEST (test_translate_query)
 
 START_TEST (test_translate_query_DNA)
     {
-        int codeno = 3;
-        us_init_translation(codeno, 1);
+        us_init_translation(3, 1);
 
         char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
         int dlen = strlen(dna);
@@ -164,8 +161,7 @@ START_TEST (test_translate_query_DNA)
 
 START_TEST (test_translate_db)
     {
-        int codeno = 3;
-        us_init_translation(1, codeno);
+        us_init_translation(1, 3);
 
         char* dna = "ATGCCCAAGCTGAATAGCGTAGAGGGGTTTTCATCATTTGAGGACGATGTATAA";
         int dlen = strlen(dna);
