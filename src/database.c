@@ -6,12 +6,6 @@
  */
 
 /*
- * TODO can at the moment only handle nucleotide sequences
- *
- * TODO add support for protein sequences
- */
-
-/*
  * TODO it might be better to store the sequences in ASCII code instead of the mapped values
  *
  * use mapping for checking for illegal characters
@@ -28,27 +22,11 @@
 #include "util.h"
 #include "sdb_datatypes.h"
 
-char map_nt[256] =
-        {
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, 1, -1, 2, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, 1, -1, 2, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, 4, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
-        };
+extern const char map_ncbi_nt16[256];
+extern const char map_ncbi_aa[256];
 
-char sym_nt[] = "-acgt                           ";
+/** Used mapping, for reading the DB. one of nt16 or aa*/
+const char* map;
 
 unsigned long sequences = 0;
 unsigned long nucleotides = 0;
@@ -82,6 +60,15 @@ inline void adjust_data_alloc(unsigned long* current, unsigned long new_size) {
  * here we do not check for double sequence-headers
  */
 void db_read(const char * filename) {
+    // initialises mapping first
+    if ((symtype == NUCLEOTIDE) || (symtype == TRANS_DB)
+            || (symtype == TRANS_BOTH)) {
+        map = map_ncbi_nt16;
+    }
+    else {
+        map = map_ncbi_aa;
+    }
+
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
     seqdata = (char *) xmalloc(dataalloc);
@@ -148,7 +135,7 @@ void db_read(const char * filename) {
             char * p = line;
             while ((c = *p++)) {
                 // check for illegal characters
-                if (map_nt[(int) c] >= 0) {
+                if (map[(int) c] >= 0) {
                     adjust_data_alloc(&dataalloc, datalen);
 
                     *(seqdata + datalen) = c;

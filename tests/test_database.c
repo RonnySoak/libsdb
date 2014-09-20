@@ -9,7 +9,7 @@
 
 #include "../src/util.h"
 #include "../src/sdb_datatypes.h"
-
+#include "../src/libsdb.h"
 
 extern void db_read(const char * filename);
 extern unsigned long db_getsequencecount();
@@ -27,6 +27,8 @@ extern void db_free();
 
 START_TEST (test_database_read)
     {
+        symtype = NUCLEOTIDE;
+
         db_read("tests/testdata/AF091148.fas");
 
         ck_assert_int_eq(1403, db_getsequencecount());
@@ -36,11 +38,33 @@ START_TEST (test_database_read)
 
 START_TEST (test_database_read_double)
     {
+        symtype = NUCLEOTIDE;
+
         db_read("tests/testdata/double.fas");
+    }END_TEST
+
+START_TEST (test_database_seqinfo)
+    {
+        symtype = NUCLEOTIDE;
+
+        db_read("tests/testdata/test.fas");
+
+        ck_assert_int_eq(5, db_getsequencecount());
+
+        p_seqinfo info = db_getseqinfo(0);
+
+        ck_assert_int_eq(db_getsequence(0), info->seq);
+        ck_assert_int_eq(db_getsequencelen(0), info->seqlen);
+        ck_assert_int_eq(db_getheader(0), info->header);
+        ck_assert_int_eq(db_getheaderlen(0), info->headerlen);
+
+        db_free();
     }END_TEST
 
 START_TEST (test_database_read_longest)
     {
+        symtype = NUCLEOTIDE;
+
         db_read("tests/testdata/test.fas");
 
         ck_assert_int_eq(5, db_getsequencecount());
@@ -53,6 +77,8 @@ START_TEST (test_database_read_longest)
 
 START_TEST (test_database_read_nuc_count)
     {
+        symtype = TRANS_BOTH;
+
         db_read("tests/testdata/nuc_count.fas");
 
         ck_assert_int_eq(2, db_getsequencecount());
@@ -64,6 +90,8 @@ START_TEST (test_database_read_nuc_count)
 
 START_TEST (test_database_read_seq_data)
     {
+        symtype = TRANS_DB;
+
         db_read("tests/testdata/test.fas");
 
         ck_assert_int_eq(5, db_getsequencecount());
@@ -82,21 +110,19 @@ START_TEST (test_database_read_seq_data)
         ck_assert_int_eq(120, length);
         ck_assert_str_eq(sequence, db_getsequence(4));
 
-//        // TODO shows the addresses of the symbols in sym_nt???
-//        showseq("gtcgctcctaccgattg");
-//        outf("\n");
-
         db_free();
     }END_TEST
 
 START_TEST (test_database_read_seq_Aminoacid)
     {
+        symtype = AMINOACID;
+
         db_read("tests/testdata/NP_009305.1.fas");
         ck_assert_str_eq(
                 "gi|6226519|ref|NP_009305.1| cytochrome-c oxidase subunit I; Cox1p",
                 db_getheader(0));
         ck_assert_int_eq(65, db_getheaderlen(0));
-        ck_assert_int_eq(316, db_getsequencelen(0));
+        ck_assert_int_eq(534, db_getsequencelen(0));
 
         db_free();
     }END_TEST
@@ -106,6 +132,7 @@ void addDatabaseTC(Suite *s) {
 
     TCase *tc_core = tcase_create("database");
     tcase_add_test(tc_core, test_database_read);
+    tcase_add_test(tc_core, test_database_seqinfo);
     tcase_add_test(tc_core, test_database_read_longest);
     tcase_add_test(tc_core, test_database_read_nuc_count);
     tcase_add_test(tc_core, test_database_read_seq_data);
