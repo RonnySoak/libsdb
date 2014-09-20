@@ -128,8 +128,6 @@ START_TEST (test_database_read_seq_Aminoacid)
     }END_TEST
 
 void addDatabaseTC(Suite *s) {
-    init_out(NULL);
-
     TCase *tc_core = tcase_create("database");
     tcase_add_test(tc_core, test_database_read);
     tcase_add_test(tc_core, test_database_seqinfo);

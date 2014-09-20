@@ -32,6 +32,9 @@ extern void db_free();
 // #############################################################################
 // Technical initialisation
 // ########################
+void sdb_init_out(const char* filename) {
+    init_out(filename);
+}
 
 // #############################################################################
 // Initialisation
@@ -79,4 +82,6 @@ void sdb_free_db() {
     it_free();
 
     db_free();
+
+    close_out();
 }

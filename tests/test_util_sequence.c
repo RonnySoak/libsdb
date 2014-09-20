@@ -6,7 +6,6 @@
  */
 
 #include "tests.h"
-
 #include "../src/util.h"
 
 typedef struct seqinfo_s seqinfo_t;
@@ -183,8 +182,6 @@ START_TEST (test_translate_db)
     }END_TEST
 
 void addUtilSequenceTC(Suite *s) {
-    init_out(NULL);
-
     TCase *tc_core = tcase_create("util_sequence");
     tcase_add_test(tc_core, test_revcompl);
     tcase_add_test(tc_core, test_translate_query);

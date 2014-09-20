@@ -29,6 +29,8 @@ void ffatal(const char * format, ...);
 
 /** Initialises the output stream. Default is stdout */
 void init_out(const char* filename);
+/** Closes the file pointer to the output stream, if it is not stdout */
+void close_out();
 /** Writes to the output stream */
 void outf(const char* format, ...);
 // output data

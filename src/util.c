@@ -34,11 +34,6 @@ void ffatal(const char * format, ...) {
     exit(1);
 }
 
-void outf(const char* format, ...) {
-    va_list arg;
-    fprintf(out_file, format, arg);
-}
-
 void init_out(const char* filename) {
     if(NULL == filename) {
         out_file = stdout;
@@ -51,6 +46,23 @@ void init_out(const char* filename) {
         }
         out_file = f;
     }
+}
+
+void close_out() {
+    if (out_file && (out_file != stdout)) {
+        if(fclose(out_file)) {
+            ffatal("Could not close output file.");
+        }
+    }
+}
+
+void outf(const char* format, ...) {
+    if (!out_file) {
+        init_out(NULL);
+    }
+
+    va_list arg;
+    fprintf(out_file, format, arg);
 }
 
 void * xmalloc(size_t size) {

@@ -226,8 +226,6 @@ START_TEST (test_next)
     }END_TEST
 
 void addDBIteratorTC(Suite *s) {
-    init_out(NULL);
-
     TCase *tc_core = tcase_create("db_iterator");
     tcase_add_test(tc_core, test_init);
     tcase_add_test(tc_core, test_next_empty);

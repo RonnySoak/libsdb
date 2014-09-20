@@ -13,5 +13,6 @@
 void addDatabaseTC(Suite *s);
 void addUtilSequenceTC(Suite *s);
 void addDBIteratorTC(Suite *s);
+void addLibSDBTC(Suite *s);
 
 #endif /* CHECK_LIBORSA_H_ */

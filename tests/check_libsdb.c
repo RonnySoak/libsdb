@@ -18,6 +18,7 @@ Suite* libsdb_suite(void) {
     addDatabaseTC(s);
     addUtilSequenceTC(s);
     addDBIteratorTC(s);
+    addLibSDBTC(s);
 
     return s;
 }
