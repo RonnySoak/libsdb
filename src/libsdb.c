@@ -20,9 +20,14 @@ extern void us_translate_sequence(int db_sequence, char * dna, long dlen,
         long strand, long frame, char ** protp, long * plenp);
 extern void us_init_translation(int qtableno, int dtableno);
 
-// #############################################################################
-// Data types
-// ##########
+// in db_iterator.c
+extern void it_init();
+extern p_sdb_sequence it_next();
+extern void it_free();
+
+// in database.c
+extern void db_read(const char * filename);
+extern void db_free();
 
 // #############################################################################
 // Technical initialisation
@@ -32,29 +37,17 @@ extern void us_init_translation(int qtableno, int dtableno);
 // Initialisation
 // ##############
 void sdb_init_fasta(char* fasta_file_name) {
-    // TODO
+    db_read(fasta_file_name);
 }
 
-void sdb_init_symbol_translation(int type, int nr_strands, int db_gencode,
+void sdb_init_symbol_handling(int type, int nr_strands, int db_gencode,
         int q_gencode) {
     symtype = type;
     query_strands = nr_strands;
 
     us_init_translation(q_gencode, db_gencode);
-}
 
-p_sdb_sequence sdb_getnextsequence() {
-    // TODO
-    return NULL;
-}
-
-/**
- * Releases the memory allocated by the function sdb_init_fasta.
- *
- * @see sdb_init_fasta
- */
-void sdb_free_db() {
-    // TODO
+    it_init();
 }
 
 // #############################################################################
@@ -72,3 +65,18 @@ void sdb_u_translate_sequence(char * dna, long dlen, long strand, long frame,
 // #############################################################################
 // Accessors
 // #########
+
+p_sdb_sequence sdb_next_sequence() {
+    return it_next();
+}
+
+/**
+ * Releases the memory allocated by the function sdb_init_fasta.
+ *
+ * @see sdb_init_fasta
+ */
+void sdb_free_db() {
+    it_free();
+
+    db_free();
+}

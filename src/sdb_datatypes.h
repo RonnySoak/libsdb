@@ -8,13 +8,13 @@
 #ifndef SDB_DATATYPES_H_
 #define SDB_DATATYPES_H_
 
-struct seqinfo {
+typedef struct seqinfo {
     char * header;
     char * seq;
     unsigned long headerlen;
     unsigned long headeridlen;
     unsigned long seqlen;
-};
+} seqinfo;
 
 typedef struct seqinfo* p_seqinfo;
 

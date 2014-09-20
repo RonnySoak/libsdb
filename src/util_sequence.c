@@ -100,9 +100,8 @@ const char * code[23] =
                 "FF*LSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
         };
 
-//const char * sym_ncbi_nt4 = "acgt############################"; XXX not used at all, may be removed
 const char * sym_ncbi_nt16 = "-acmgrsvtwyhkdbn################";
-//const char * sym_ncbi_nt16u = "-ACMGRSVTWYHKDBN################"; XXX may be used for printing the sequences
+//const char * sym_ncbi_nt16u = "-ACMGRSVTWYHKDBN################"; XXX may be used for printing the sequences in upper case
 const char * sym_ncbi_aa = "-ABCDEFGHIKLMNPQRSTVWXYZU*OJ####";
 
 static const char ntcompl[16] =
@@ -113,7 +112,7 @@ static char d_translate[16 * 16 * 16];
 
 static const char remap[] = { 2, 1, 3, 0 };
 
-static void create_translate_table(int tableno, char * table) {
+static void init_translate_table(int tableno, char * table) {
     /* initialise translation table */
 
     // TODO understand this !!!!
@@ -194,8 +193,8 @@ static void create_translate_table(int tableno, char * table) {
 }
 
 void us_init_translation(int qtableno, int dtableno) {
-    create_translate_table(qtableno, q_translate);
-    create_translate_table(dtableno, d_translate);
+    init_translate_table(qtableno, q_translate);
+    init_translate_table(dtableno, d_translate);
 }
 
 void us_translate_sequence(int db_sequence, char * dna, long dlen,

@@ -20,9 +20,9 @@ extern char map_ncbi_nt16[256];
 
 static unsigned long seq_index;
 
-static int buffer_max;
+static int buffer_max = 0;
 static p_sdb_sequence* buffer;
-static int buffer_p;
+static int buffer_p = 0;
 
 /**
  * Initialises the buffer. Translates the DB sequence and computes the reverse
@@ -85,6 +85,9 @@ static void fill_buffer(p_seqinfo seqinfo) {
 }
 
 void it_free() {
+    buffer_max = 0;
+    buffer_p = 0;
+
     if (buffer) {
         for (int i = 0; i < buffer_max; i++) {
             if(buffer[i]) {
@@ -97,7 +100,7 @@ void it_free() {
                 buffer[i]->len = 0;
                 buffer[i]->info = 0;
 
-                free(buffer[i]);;
+                free(buffer[i]);
             }
         }
         free(buffer);

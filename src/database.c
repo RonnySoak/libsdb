@@ -6,10 +6,14 @@
  */
 
 /*
- * TODO it might be better to store the sequences in ASCII code instead of the mapped values
+ * TODO doc
  *
- * use mapping for checking for illegal characters
- * report sequences with illegal characters and remove some characters without reporting (additional space or newline, etc)
+ * we store the sequences in ASCII code instead of the mapped values
+ *
+ * and use mapping for checking for illegal characters
+ *
+ * report sequences with illegal characters and remove some characters without reporting
+ * (additional space or newline, etc)
  *
  * stores headers and sequences in memory, as they are in the file
  */
@@ -49,10 +53,20 @@ char * seqdata = 0;
 /**
  * Adjusts the memory allocated for storing the sequence data.
  */
-inline void adjust_data_alloc(unsigned long* current, unsigned long new_size) {
+static inline void adjust_data_alloc(unsigned long* current,
+        unsigned long new_size) {
     while (new_size >= *current) {
         *current += MEMCHUNK;
         seqdata = (char *) xrealloc(seqdata, *current);
+    }
+}
+
+static void init_mapping() {
+    if ((symtype == AMINOACID) || (symtype == TRANS_QUERY)) {
+        map = map_ncbi_aa;
+    }
+    else {
+        map = map_ncbi_nt16;
     }
 }
 
@@ -60,14 +74,7 @@ inline void adjust_data_alloc(unsigned long* current, unsigned long new_size) {
  * here we do not check for double sequence-headers
  */
 void db_read(const char * filename) {
-    // initialises mapping first
-    if ((symtype == NUCLEOTIDE) || (symtype == TRANS_DB)
-            || (symtype == TRANS_BOTH)) {
-        map = map_ncbi_nt16;
-    }
-    else {
-        map = map_ncbi_aa;
-    }
+    init_mapping();
 
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
@@ -172,8 +179,7 @@ void db_read(const char * filename) {
     fclose(fp);
 
     /* create indices */
-
-    seqindex = (p_seqinfo) xmalloc(sequences * sizeof(struct seqinfo));
+    seqindex = (p_seqinfo) xmalloc(sequences * sizeof(seqinfo));
     p_seqinfo seq_iterator = seqindex;
 
     char * data_iterator = seqdata;
