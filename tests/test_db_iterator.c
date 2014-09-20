@@ -81,6 +81,8 @@ START_TEST (test_next_one)
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
         ck_assert_str_eq(db_getsequence(0), seq->seq);
+        ck_assert_int_eq(0, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // check for the end of sequences
         ck_assert_ptr_eq(NULL, it_next());
@@ -97,12 +99,16 @@ START_TEST (test_next_one)
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
         ck_assert_str_eq(db_getsequence(0), seq->seq);
+        ck_assert_int_eq(0, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // get reverse complement strand
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
         ck_assert_str_eq(us_revcompl(db_getsequence(0), seq->len), seq->seq);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // check for the end of sequences
         ck_assert_ptr_eq(NULL, it_next());
@@ -121,18 +127,24 @@ START_TEST (test_next_one)
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(18, seq->len);
         ck_converted_prot_eq("MPKTNSVEGFSSFEDDV*", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // 2.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("CPSWMA*RGFHHLRTMY", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(1, seq->frame);
 
         // 3.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("AQAE*RRGVFIIWGRCM", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(2, seq->frame);
 
         // check for the end of sequences
         ck_assert_ptr_eq(NULL, it_next());
@@ -151,36 +163,48 @@ START_TEST (test_next_one)
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(18, seq->len);
         ck_converted_prot_eq("MPKTNSVEGFSSFEDDV*", seq->seq, seq->len);
+        ck_assert_int_eq(0, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // 2.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("CPSWMA*RGFHHLRTMY", seq->seq, seq->len);
+        ck_assert_int_eq(0, seq->strand);
+        ck_assert_int_eq(1, seq->frame);
 
         // 3.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("AQAE*RRGVFIIWGRCM", seq->seq, seq->len);
+        ck_assert_int_eq(0, seq->strand);
+        ck_assert_int_eq(2, seq->frame);
 
         // 4.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(18, seq->len);
         ck_converted_prot_eq("LYIVTKWWKPTYAIQTGH", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(0, seq->frame);
 
         // 5.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("YTSSSNDENPSTTFSLG", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(1, seq->frame);
 
         // 6.
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(17, seq->len);
         ck_converted_prot_eq("MHRPQMMKTPTRYSAWA", seq->seq, seq->len);
+        ck_assert_int_eq(1, seq->strand);
+        ck_assert_int_eq(2, seq->frame);
 
         // check for the end of sequences
         ck_assert_ptr_eq(NULL, it_next());

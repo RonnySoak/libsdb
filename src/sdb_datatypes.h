@@ -25,6 +25,8 @@ typedef struct seqinfo* p_seqinfo;
  */
 typedef struct sdb_sequence {
     p_seqinfo info;
+    int strand;
+    int frame;
     char* seq;
     long len;
 } sdb_sequence;

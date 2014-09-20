@@ -37,12 +37,16 @@ static void fill_buffer(p_seqinfo seqinfo) {
         buffer[0]->info = seqinfo;
         buffer[0]->len = len;
         buffer[0]->seq = seq;
+        buffer[0]->strand = 0;
+        buffer[0]->frame = 0;
 
         if (query_strands & 2) {
             // reverse complement
             buffer[1]->info = seqinfo;
             buffer[1]->seq = us_revcompl(seq, len);
             buffer[1]->len = len;
+            buffer[1]->strand = 1;
+            buffer[1]->frame = 0;
         }
     }
     else if ((symtype == TRANS_DB) || (symtype == TRANS_BOTH)) {
@@ -59,6 +63,9 @@ static void fill_buffer(p_seqinfo seqinfo) {
             for (long f = 0; f < 3; f++) { // frames
                 buffer[f]->info = seqinfo;
 
+                buffer[f]->strand = query_strands;
+                buffer[f]->frame = f;
+
                 us_translate_sequence(1, conv_seq, len, s, f,
                         &buffer[f]->seq,
                         &buffer[f]->len);
@@ -69,6 +76,9 @@ static void fill_buffer(p_seqinfo seqinfo) {
             for (long s = 0; s < 2; s++) { // strands
                 for (long f = 0; f < 3; f++) { // frames
                     buffer[3 * s + f]->info = seqinfo;
+
+                    buffer[3 * s + f]->strand = s;
+                    buffer[3 * s + f]->frame = f;
 
                     us_translate_sequence(1, conv_seq, len, s, f,
                             &buffer[3 * s + f]->seq,
@@ -81,6 +91,8 @@ static void fill_buffer(p_seqinfo seqinfo) {
         buffer[0]->info = seqinfo;
         buffer[0]->len = len;
         buffer[0]->seq = seq;
+        buffer[0]->strand = 0;
+        buffer[0]->frame = 0;
     }
 }
 
@@ -98,6 +110,8 @@ void it_free() {
                 }
                 buffer[i]->seq = 0;
                 buffer[i]->len = 0;
+                buffer[i]->frame = 0;
+                buffer[i]->strand = 0;
                 buffer[i]->info = 0;
 
                 free(buffer[i]);
@@ -139,6 +153,8 @@ void it_init() {
         buffer[i]->info = 0;
         buffer[i]->len = 0;
         buffer[i]->seq = 0;
+        buffer[i]->frame = 0;
+        buffer[i]->strand = 0;
     }
 }
 
