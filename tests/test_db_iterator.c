@@ -19,14 +19,44 @@ extern char * db_getsequence(unsigned long seqno);
 extern unsigned long db_getsequencelen(unsigned long seqno);
 extern void db_free();
 
-extern char* us_revcompl(char* seq, long len);
 extern void us_init_translation(long qtableno, long dtableno);
+extern char* us_remap_sequence(char* sequence, int len, const char* remap);
 
 extern void ck_converted_prot_eq(char* ref, char* protp, int plen);
 
 extern void it_init();
 extern void it_free();
 extern p_sdb_sequence it_next();
+
+extern const char * sym_ncbi_nt16u;
+
+/**
+ * Simple reverse complement implementation for upper case nucleotide sequences.
+ */
+char* revcompl(char* seq, int len) {
+    char* rc = (char *) xmalloc(len + 1);
+
+    for (long i = 0; i < len; i++) {
+        switch ((int) seq[len - 1 - i]) {
+        case 65:
+            rc[i] = 'T';
+            break;
+        case 67:
+            rc[i] = 'G';
+            break;
+        case 71:
+            rc[i] = 'C';
+            break;
+        case 84:
+            case 85:
+            rc[i] = 'A';
+            break;
+        }
+    }
+    rc[len] = 0;
+
+    return rc;
+}
 
 START_TEST (test_init)
     {
@@ -80,7 +110,8 @@ START_TEST (test_next_one)
         p_sdb_sequence seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
-        ck_assert_str_eq(db_getsequence(0), seq->seq);
+        ck_assert_str_eq(db_getsequence(0),
+                us_remap_sequence(seq->seq, seq->len, sym_ncbi_nt16u));
         ck_assert_int_eq(0, seq->strand);
         ck_assert_int_eq(0, seq->frame);
 
@@ -98,7 +129,8 @@ START_TEST (test_next_one)
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
-        ck_assert_str_eq(db_getsequence(0), seq->seq);
+        ck_assert_str_eq(db_getsequence(0),
+                us_remap_sequence(seq->seq, seq->len, sym_ncbi_nt16u));
         ck_assert_int_eq(0, seq->strand);
         ck_assert_int_eq(0, seq->frame);
 
@@ -106,7 +138,8 @@ START_TEST (test_next_one)
         seq = it_next();
         ck_assert_ptr_eq(db_getseqinfo(0), seq->info);
         ck_assert_int_eq(db_getsequencelen(0), seq->len);
-        ck_assert_str_eq(us_revcompl(db_getsequence(0), seq->len), seq->seq);
+        ck_assert_str_eq(revcompl(db_getsequence(0), seq->len),
+                us_remap_sequence(seq->seq, seq->len, sym_ncbi_nt16u));
         ck_assert_int_eq(1, seq->strand);
         ck_assert_int_eq(0, seq->frame);
 

@@ -101,7 +101,7 @@ const char * code[23] =
         };
 
 const char * sym_ncbi_nt16 = "-acmgrsvtwyhkdbn################";
-//const char * sym_ncbi_nt16u = "-ACMGRSVTWYHKDBN################"; XXX may be used for printing the sequences in upper case
+const char * sym_ncbi_nt16u = "-ACMGRSVTWYHKDBN################";
 const char * sym_ncbi_aa = "-ABCDEFGHIKLMNPQRSTVWXYZU*OJ####";
 
 static const char ntcompl[16] =
@@ -195,6 +195,34 @@ static void init_translate_table(int tableno, char * table) {
 void us_init_translation(int qtableno, int dtableno) {
     init_translate_table(qtableno, q_translate);
     init_translate_table(dtableno, d_translate);
+}
+
+char* us_map_sequence(char* sequence, int len, const char* map) {
+    char* mapped = xmalloc(len + 1);
+
+    char m;
+    for (int i = 0; i < len; i++) {
+        if ((m = map[(int) sequence[i]]) >= 0) {
+            mapped[i] = m;
+        }
+    }
+    mapped[len] = 0;
+
+    return mapped;
+}
+
+char* us_remap_sequence(char* sequence, int len, const char* remap) {
+    char* mapped = xmalloc(len + 1);
+
+    char m;
+    for (int i = 0; i < len; i++) {
+        if ((m = remap[(int) sequence[i]]) >= 0) {
+            mapped[i] = m;
+        }
+    }
+    mapped[len] = 0;
+
+    return mapped;
 }
 
 void us_translate_sequence(int db_sequence, char * dna, long dlen,

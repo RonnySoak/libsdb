@@ -15,8 +15,10 @@ extern p_seqinfo db_getseqinfo(unsigned long seqno);
 extern void us_translate_sequence(int db_sequence, char * dna, long dlen,
         long strand, long frame, char ** protp, long * plenp);
 extern char* us_revcompl(char* seq, long len);
+extern char* us_map_sequence(char* sequence, int len, const char* map);
 
-extern char map_ncbi_nt16[256];
+extern const char map_ncbi_nt16[256];
+extern const char map_ncbi_aa[256];
 
 static unsigned long seq_index;
 
@@ -36,25 +38,23 @@ static void fill_buffer(p_seqinfo seqinfo) {
         // first element
         buffer[0]->info = seqinfo;
         buffer[0]->len = len;
-        buffer[0]->seq = seq;
+        buffer[0]->seq = us_map_sequence(seq, len, map_ncbi_nt16);
         buffer[0]->strand = 0;
         buffer[0]->frame = 0;
 
         if (query_strands & 2) {
             // reverse complement
             buffer[1]->info = seqinfo;
-            buffer[1]->seq = us_revcompl(seq, len);
+            // no need for a second mapping
+            buffer[1]->seq = us_revcompl(buffer[0]->seq, len);
             buffer[1]->len = len;
             buffer[1]->strand = 1;
             buffer[1]->frame = 0;
         }
     }
     else if ((symtype == TRANS_DB) || (symtype == TRANS_BOTH)) {
-        char conv_seq[len + 1];
-        for (int i = 0; i < len; i++) {
-            conv_seq[i] = map_ncbi_nt16[(int) seq[i]];
-        }
-        conv_seq[len] = 0;
+        // map first and then translate the sequences
+        char* conv_seq = us_map_sequence(seq, len, map_ncbi_nt16);
 
         if (query_strands ^ BOTH_STRANDS) {
             // for forward or complementary strand only
@@ -89,8 +89,8 @@ static void fill_buffer(p_seqinfo seqinfo) {
     }
     else {
         buffer[0]->info = seqinfo;
+        buffer[0]->seq = us_map_sequence(seq, len, map_ncbi_aa);
         buffer[0]->len = len;
-        buffer[0]->seq = seq;
         buffer[0]->strand = 0;
         buffer[0]->frame = 0;
     }
