@@ -10,6 +10,16 @@
 #ifndef LIBSDB_H_
 #define LIBSDB_H_
 
+/**
+ * TODO
+ * Merge libsdb and libssa
+ *
+ * specify functions, which enable the caller, to use an own implementation fo the database
+ *  -> e.g. a function pointer as a parameter
+ *
+ * add functions, to get chunks of the DB
+ */
+
 #include "sdb_datatypes.h"
 
 // #############################################################################
@@ -38,6 +48,11 @@ void sdb_init_out(const char* filename);
 // ##############
 void sdb_init_fasta(char* fasta_file_name);
 
+/**
+ * Initialise the database lib, to use a third party implementation.
+ */
+void sdb_init_external(p_sdb_sequence (*extern_next_sequence)());
+
 /*
  * TODO the symbol translation is done on the fly on both sides
  *
@@ -49,7 +64,6 @@ void sdb_init_fasta(char* fasta_file_name);
  */
 void sdb_init_symbol_handling(int type, int strands, int db_gencode,
         int q_gencode);
-
 
 // #############################################################################
 // Utility functions

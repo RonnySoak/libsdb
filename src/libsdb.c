@@ -29,6 +29,9 @@ extern void it_free();
 extern void db_read(const char * filename);
 extern void db_free();
 
+p_sdb_sequence (*external_next)() = 0;
+int use_internal_db = 1;
+
 // #############################################################################
 // Technical initialisation
 // ########################
@@ -41,6 +44,14 @@ void sdb_init_out(const char* filename) {
 // ##############
 void sdb_init_fasta(char* fasta_file_name) {
     db_read(fasta_file_name);
+
+    use_internal_db = 1;
+}
+
+void sdb_init_external(p_sdb_sequence (*extern_next_sequence)()) {
+    external_next = extern_next_sequence;
+
+    use_internal_db = 0;
 }
 
 void sdb_init_symbol_handling(int type, int nr_strands, int db_gencode,
@@ -70,7 +81,10 @@ void sdb_u_translate_sequence(char * dna, long dlen, long strand, long frame,
 // #########
 
 p_sdb_sequence sdb_next_sequence() {
-    return it_next();
+    if (use_internal_db) {
+        return it_next();
+    }
+    return external_next();
 }
 
 /**
