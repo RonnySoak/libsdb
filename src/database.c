@@ -6,16 +6,17 @@
  */
 
 /*
- * TODO doc
- *
  * we store the sequences in ASCII code instead of the mapped values
+ *
+ * stores headers and sequences in memory, as they are in the file
+ *
+ * TODO
+ * doc
  *
  * and use mapping for checking for illegal characters
  *
  * report sequences with illegal characters and remove some characters without reporting
  * (additional space or newline, etc)
- *
- * stores headers and sequences in memory, as they are in the file
  */
 
 #include <stdio.h>
@@ -24,13 +25,6 @@
 
 #include "libsdb.h"
 #include "util.h"
-#include "sdb_datatypes.h"
-
-extern const char map_ncbi_nt16[256];
-extern const char map_ncbi_aa[256];
-
-/** Used mapping, for reading the DB. one of nt16 or aa*/
-const char* map;
 
 unsigned long sequences = 0;
 unsigned long nucleotides = 0;
@@ -61,21 +55,10 @@ static inline void adjust_data_alloc(unsigned long* current,
     }
 }
 
-static void init_mapping() {
-    if ((symtype == AMINOACID) || (symtype == TRANS_QUERY)) {
-        map = map_ncbi_aa;
-    }
-    else {
-        map = map_ncbi_nt16;
-    }
-}
-
 /*
  * here we do not check for double sequence-headers
  */
 void db_read(const char * filename) {
-    init_mapping();
-
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
     seqdata = (char *) xmalloc(dataalloc);
@@ -142,16 +125,21 @@ void db_read(const char * filename) {
             char * p = line;
             while ((c = *p++)) {
                 // check for illegal characters
-                if (map[(int) c] >= 0) {
+                if (c != '\n') {
+                    // TODO add checking of illegal symbols
+
                     adjust_data_alloc(&dataalloc, datalen);
 
                     *(seqdata + datalen) = c;
                     datalen++;
                 }
-                else if (c != '\n') {
-                    // TODO some characters (like '\n') should only be removed, but the sequence in total might be fine
-                    ffatal("Illegal character in sequence: '%c'%d", c, c);
-                }
+
+//                if (map[(int) c] >= 0) {
+//                }
+//                else if (c != '\n') {
+//                    // TODO some characters (like '\n') should only be removed, but the sequence in total might be fine
+//                    ffatal("Illegal character in sequence: '%c'%d", c, c);
+//                }
             }
 
             /* get next line */
@@ -189,8 +177,7 @@ void db_read(const char * filename) {
 
         data_iterator += seq_iterator->headerlen + 1;
 
-        seq_iterator->headeridlen = xstrchrnul(seq_iterator->header, ' ')
-                - seq_iterator->header;
+        seq_iterator->ID = i;
 
         seq_iterator->seq = data_iterator;
         seq_iterator->seqlen = strlen(data_iterator);

@@ -16,8 +16,6 @@ Suite* libsdb_suite(void) {
 
     /* Core test case */
     addDatabaseTC(s);
-    addUtilSequenceTC(s);
-    addDBIteratorTC(s);
     addLibSDBTC(s);
 
     return s;

@@ -15,15 +15,6 @@
 #include "util.h"
 
 FILE* out_file;
-/* Describes, if the DB sequences should be translated prior to the alignments.
- * One of: 0 - 4
- * @see sdb_init_symbol_translation in libsdb.h */
-int symtype;
-/* Describes which strands are used in the alignments
- * One of: 1 - 3
- * @see sdb_init_symbol_translation in libsdb.h */
-int query_strands;
-int db_gencode;
 
 void ffatal(const char * format, ...) {
     if (format) {
@@ -107,24 +98,5 @@ char * xstrchrnul(char *s, int c) {
 //
 //  return (char *) s;
 //}
-
-/**
- * Simple hash function used for hash tables.
- *
- * TODO remove
- */
-unsigned long hash_fnv_1a_64(unsigned char * s, unsigned long n) {
-    const unsigned long fnv_offset = 14695981039346656037UL;
-    const unsigned long fnv_prime = 1099511628211;
-
-    unsigned long hash = fnv_offset;
-
-    for (unsigned long i = 0; i < n; i++) {
-        unsigned char c = *s++;
-        hash = (hash ^ c) * fnv_prime;
-    }
-
-    return hash;
-}
 
 #endif /* DATA_H_ */

@@ -17,10 +17,6 @@
 #define LINE_MAX 2048
 #endif
 
-extern int symtype;
-extern int query_strands;
-extern int db_gencode;
-
 void * xmalloc(size_t size);
 void * xrealloc(void *ptr, size_t size);
 
@@ -35,10 +31,6 @@ void close_out();
 void outf(const char* format, ...);
 // output data
 
-// TODO what does it do???
 char * xstrchrnul(char *s, int c);
-
-// TODO what does it do???
-unsigned long hash_fnv_1a_64(unsigned char * s, unsigned long n);
 
 #endif /* UTIL_H_ */
