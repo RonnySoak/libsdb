@@ -12,5 +12,6 @@
 
 void addDatabaseTC(Suite *s);
 void addLibSDBTC(Suite *s);
+void addLibSSAExternDBTC(Suite *s);
 
 #endif /* CHECK_LIBORSA_H_ */

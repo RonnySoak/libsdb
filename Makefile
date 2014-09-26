@@ -35,7 +35,7 @@ CXX := gcc
  string constant to char*` warnings
 CXXFLAGS := -Wall -O3 -std=c99 -march=native $(COMMON)
 
-PROG := libsdb libsdb_check
+PROG := init libsdb libsdb_check
 
 .SUFFIXES := .o .c
 
@@ -44,6 +44,10 @@ PROG := libsdb libsdb_check
 
 all : $(PROG)
 
+init:
+	@echo 'Copying file libssa_extern_db.h'
+	cp ../libssa/src/libssa_extern_db.h src/
+	
 #mpilibsdb.o : src/libsdb.cc $(OBJS) $(DEPS)
 #	$(CXX) $(CXXFLAGS) -DMPIlibsdb $(MPI_COMPILE) -c -o $@ src/libsdb.cc
 

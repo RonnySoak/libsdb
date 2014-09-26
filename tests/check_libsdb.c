@@ -17,6 +17,7 @@ Suite* libsdb_suite(void) {
     /* Core test case */
     addDatabaseTC(s);
     addLibSDBTC(s);
+    addLibSSAExternDBTC(s);
 
     return s;
 }
