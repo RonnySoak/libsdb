@@ -9,8 +9,10 @@
 
 #include "../src/util.h"
 #include "../src/libsdb.h"
+#include "../src/sdb_error.h"
 
-extern void db_read(const char * filename);
+extern void db_open(const char * filename);
+extern void db_read();
 extern unsigned long db_getsequencecount();
 extern unsigned long db_getnucleotidecount();
 extern unsigned long db_getlongestheader();
@@ -26,21 +28,39 @@ extern void db_free();
 
 START_TEST (test_database_read)
     {
-        db_read("tests/testdata/AF091148.fas");
+        db_open("tests/testdata/AF091148.fas");
+        db_read();
 
         ck_assert_int_eq(1403, db_getsequencecount());
 
         db_free();
     }END_TEST
 
+//START_TEST (test_database_not_found)
+//    {
+//        db_read("tests/testdata/some_impossible_name_foo.bar");
+//
+//        db_read();
+//
+//        ck_assert_int_eq(0, db_getsequencecount());
+//
+//        sdb_error err = sdb_last_error();
+//        ck_assert_ptr_eq(NULL, &err);
+//        ck_assert_str_eq("Unable to open input data file", sdb_get_error_desc(err));
+//
+//        db_free();
+//    }END_TEST
+
 START_TEST (test_database_read_double)
     {
-        db_read("tests/testdata/double.fas");
+        db_open("tests/testdata/double.fas");
+        db_read();
     }END_TEST
 
 START_TEST (test_database_seqinfo)
     {
-        db_read("tests/testdata/test.fas");
+        db_open("tests/testdata/test.fas");
+        db_read();
 
         ck_assert_int_eq(5, db_getsequencecount());
 
@@ -56,7 +76,8 @@ START_TEST (test_database_seqinfo)
 
 START_TEST (test_database_read_longest)
     {
-        db_read("tests/testdata/test.fas");
+        db_open("tests/testdata/test.fas");
+        db_read();
 
         ck_assert_int_eq(5, db_getsequencecount());
 
@@ -68,7 +89,8 @@ START_TEST (test_database_read_longest)
 
 START_TEST (test_database_read_nuc_count)
     {
-        db_read("tests/testdata/nuc_count.fas");
+        db_open("tests/testdata/nuc_count.fas");
+        db_read();
 
         ck_assert_int_eq(2, db_getsequencecount());
 
@@ -79,7 +101,8 @@ START_TEST (test_database_read_nuc_count)
 
 START_TEST (test_database_read_seq_data)
     {
-        db_read("tests/testdata/test.fas");
+        db_open("tests/testdata/test.fas");
+        db_read();
 
         ck_assert_int_eq(5, db_getsequencecount());
 
@@ -102,7 +125,8 @@ START_TEST (test_database_read_seq_data)
 
 START_TEST (test_database_read_seq_Aminoacid)
     {
-        db_read("tests/testdata/NP_009305.1.fas");
+        db_open("tests/testdata/NP_009305.1.fas");
+        db_read();
         ck_assert_str_eq(
                 "gi|6226519|ref|NP_009305.1| cytochrome-c oxidase subunit I; Cox1p",
                 db_getheader(0));
@@ -115,6 +139,7 @@ START_TEST (test_database_read_seq_Aminoacid)
 void addDatabaseTC(Suite *s) {
     TCase *tc_core = tcase_create("database");
     tcase_add_test(tc_core, test_database_read);
+//    tcase_add_test(tc_core, test_database_not_found);
     tcase_add_test(tc_core, test_database_seqinfo);
     tcase_add_test(tc_core, test_database_read_longest);
     tcase_add_test(tc_core, test_database_read_nuc_count);

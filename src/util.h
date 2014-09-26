@@ -20,7 +20,6 @@
 void * xmalloc(size_t size);
 void * xrealloc(void *ptr, size_t size);
 
-// output data
 void ffatal(const char * format, ...);
 
 /** Initialises the output stream. Default is stdout */

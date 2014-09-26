@@ -5,6 +5,7 @@ OBJS += \
 
 USER_OBJS += \
 ./src/util.h \
-./src/libsdb.h
+./src/libsdb.h \
+./src/sdb_error.h
 
 TO_CLEAN +=

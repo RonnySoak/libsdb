@@ -25,21 +25,24 @@
 
 #include "libsdb.h"
 #include "util.h"
+#include "sdb_error.h"
 
-unsigned long sequences = 0;
-unsigned long nucleotides = 0;
-int longest = 0;
-int longestheader = 0;
+static unsigned long sequences = 0;
+static unsigned long nucleotides = 0;
+static int longest = 0;
+static int longestheader = 0;
 
 /**
  * Stores the indices, where the data and header of the sequences in
  * @see seqdata are located.
  */
-p_seqinfo seqindex = 0;
+static p_seqinfo seqindex = 0;
 /**
  * Stores the raw header and sequence data as found in the database file.
  */
-char * seqdata = 0;
+static char * seqdata = 0;
+
+static FILE * fp = NULL;
 
 #define MEMCHUNK 1048576
 #define LINEALLOC LINE_MAX
@@ -55,10 +58,81 @@ static inline void adjust_data_alloc(unsigned long* current,
     }
 }
 
+static int create_index() {
+    seqindex = (p_seqinfo) xmalloc(sequences * sizeof(seqinfo));
+    if (!seqindex) {
+        return -1;
+    }
+    p_seqinfo seq_iterator = seqindex;
+
+    char * data_iterator = seqdata;
+    for (unsigned long i = 0; i < sequences; i++) {
+        seq_iterator->header = data_iterator;
+        seq_iterator->headerlen = strlen(seq_iterator->header);
+
+        data_iterator += seq_iterator->headerlen + 1;
+
+        seq_iterator->ID = i;
+
+        seq_iterator->seq = data_iterator;
+        seq_iterator->seqlen = strlen(data_iterator);
+
+        data_iterator += seq_iterator->seqlen + 1;
+
+        seq_iterator++;
+    }
+
+    return 0;
+}
+
+static int read_header(char line[LINEALLOC],
+        unsigned long * dataalloc, unsigned long * datalen) {
+    /* read header */
+    if (line[0] != '>') {
+        ffatal("Illegal header line in fasta file.");
+//        set_error(DB_ILLEGAL_HEADER);
+//        return -1;
+    }
+
+    int headerlen = strlen(line);
+
+    // fgets stops at \n
+    if (line[headerlen - 1] == '\n') {
+        line[headerlen - 1] = 0;
+        headerlen--;
+    }
+    headerlen--; // without the leading '>'
+
+    if (headerlen > longestheader)
+        longestheader = headerlen;
+
+    /* store the header */
+    adjust_data_alloc(dataalloc, (*datalen + headerlen + 1));
+
+    memcpy(seqdata + *datalen, line + 1, headerlen);
+    *(seqdata + *datalen + headerlen) = 0; // set NUL terminator
+    *datalen += headerlen + 1;
+
+    return 0;
+}
+
+void db_open(const char * filename) {
+    if (filename) {
+        fp = fopen(filename, "r");
+        if (!fp) {
+            set_error(DB_NOT_FOUND);
+            return;
+        }
+    }
+    else {
+        fp = stdin;
+    }
+}
+
 /*
  * here we do not check for double sequence-headers
  */
-void db_read(const char * filename) {
+void db_read() {
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
     seqdata = (char *) xmalloc(dataalloc);
@@ -69,49 +143,22 @@ void db_read(const char * filename) {
     sequences = 0;
     nucleotides = 0;
 
-    FILE * fp = NULL;
-    if (filename) {
-        fp = fopen(filename, "r");
-        if (!fp)
-            ffatal("Error: Unable to open input data file (%s).", filename);
-    }
-    else {
-        fp = stdin;
-    }
-
     char line[LINEALLOC];
     line[0] = 0;
     if ( NULL == fgets(line, LINEALLOC, fp)) {
+//        set_error(DB_LINE_NOT_READ);
+//        return;
         ffatal("Could not read query sequence");
     }
 
     while (line[0]) {
-        /* read header */
-        if (line[0] != '>')
-            ffatal("Illegal header line in fasta file.");
-
-        int headerlen = strlen(line);
-
-        // fgets stops at \n
-        if (line[headerlen - 1] == '\n') {
-            line[headerlen - 1] = 0;
-            headerlen--;
-        }
-        headerlen--; // without the leading '>'
-
-        if (headerlen > longestheader)
-            longestheader = headerlen;
-
-        /* store the header */
-        adjust_data_alloc(&dataalloc, (datalen + headerlen + 1));
-
-        memcpy(seqdata + datalen, line + 1, headerlen);
-        *(seqdata + datalen + headerlen) = 0; // set NUL terminator
-        datalen += headerlen + 1;
+        read_header(line, &dataalloc, &datalen);
 
         /* get next line */
         line[0] = 0;
         if ( NULL == fgets(line, LINEALLOC, fp)) {
+//            set_error(DB_LINE_NOT_READ);
+//            break;
             ffatal("Could not read query sequence");
         }
 
@@ -164,28 +211,21 @@ void db_read(const char * filename) {
         sequences++;
     }
 
-    fclose(fp);
-
     /* create indices */
-    seqindex = (p_seqinfo) xmalloc(sequences * sizeof(seqinfo));
-    p_seqinfo seq_iterator = seqindex;
+    create_index();
+}
 
-    char * data_iterator = seqdata;
-    for (unsigned long i = 0; i < sequences; i++) {
-        seq_iterator->header = data_iterator;
-        seq_iterator->headerlen = strlen(seq_iterator->header);
-
-        data_iterator += seq_iterator->headerlen + 1;
-
-        seq_iterator->ID = i;
-
-        seq_iterator->seq = data_iterator;
-        seq_iterator->seqlen = strlen(data_iterator);
-
-        data_iterator += seq_iterator->seqlen + 1;
-
-        seq_iterator++;
+void db_free() {
+    if (fp) {
+        if (!fclose(fp)) {
+            set_error(DB_NOT_CLOSED);
+        }
     }
+
+    if (seqdata)
+        free(seqdata);
+    if (seqindex)
+        free(seqindex);
 }
 
 unsigned long db_getsequencecount() {
@@ -233,9 +273,3 @@ unsigned long db_getheaderlen(unsigned long seqno) {
     return seqindex[seqno].headerlen;
 }
 
-void db_free() {
-    if (seqdata)
-        free(seqdata);
-    if (seqindex)
-        free(seqindex);
-}

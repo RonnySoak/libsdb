@@ -30,11 +30,20 @@ typedef struct seqinfo {
 
 typedef struct seqinfo* p_seqinfo;
 
+typedef enum sdb_error sdb_error;
+
 // #############################################################################
 // Constants
 // #########
 #define VERBOSE_ON 1 // TODO
 #define VERBOSE_OFF 0
+
+// #############################################################################
+// Error handling
+// ##############
+char* sdb_get_error_desc(sdb_error err);
+
+sdb_error sdb_last_error();
 
 // #############################################################################
 // Technical initialisation
