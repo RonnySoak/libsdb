@@ -20,7 +20,7 @@ extern unsigned long db_getlongestsequence();
 extern p_seqinfo db_getseqinfo(unsigned long seqno);
 extern char * db_getsequence(unsigned long seqno);
 extern void db_getsequenceandlength(unsigned long seqno, char ** address,
-        long * length);
+        unsigned long * length);
 extern unsigned long db_getsequencelen(unsigned long seqno);
 extern char * db_getheader(unsigned long seqno);
 extern unsigned long db_getheaderlen(unsigned long seqno);
@@ -113,7 +113,7 @@ START_TEST (test_database_read_seq_data)
         ck_assert_int_eq(32, db_getheaderlen(3));
         ck_assert_int_eq(120, db_getsequencelen(4));
 
-        long length = 0;
+        unsigned long length = 0;
         char* sequence = 0;
         db_getsequenceandlength(4, &sequence, &length);
 

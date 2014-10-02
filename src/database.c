@@ -29,8 +29,8 @@
 
 static unsigned long sequences = 0;
 static unsigned long nucleotides = 0;
-static int longest = 0;
-static int longestheader = 0;
+static unsigned long longest = 0;
+static unsigned long longestheader = 0;
 
 /**
  * Stores the indices, where the data and header of the sequences in
@@ -198,7 +198,7 @@ void db_read() {
 
         adjust_data_alloc(&dataalloc, datalen);
 
-        long length = datalen - seqbegin;
+        unsigned long length = datalen - seqbegin;
 
         nucleotides += length;
 
@@ -256,9 +256,9 @@ char * db_getsequence(unsigned long seqno) {
 }
 
 void db_getsequenceandlength(unsigned long seqno, char ** address,
-        long * length) {
+        unsigned long * length) {
     *address = seqindex[seqno].seq;
-    *length = (long) (seqindex[seqno].seqlen);
+    *length = (unsigned long) (seqindex[seqno].seqlen);
 }
 
 unsigned long db_getsequencelen(unsigned long seqno) {
