@@ -33,9 +33,9 @@ LINKFLAGS := $(COMMON)
 CXX := gcc
 # -Wno-write-strings removes the `deprecated conversion from\
  string constant to char*` warnings
-CXXFLAGS := -Wall -O3 -std=c99 -march=native $(COMMON)
+CXXFLAGS := -Wall -O0 -std=c99 -march=native $(COMMON)
 
-PROG := init libsdb libsdb_check
+PROG := init libsdb libsdb_check libsdb_example
 
 .SUFFIXES := .o .c
 
@@ -67,6 +67,11 @@ libsdb_check : $(TESTS) $(OBJS) $(DEPS)
 	$(CXX) $(LINKFLAGS) -o $@ $(OBJS) $(TESTS) $(TEST_LIBS) $(LIBS)
 	@echo 'Finished building target: $@'
 
+libsdb_example : $(OBJS) $(DEPS)
+	@echo 'Building target: $@'
+	$(CXX) $(CXXFLAGS) $(LINKFLAGS) -o $@ ./src/libsdb_example.c $(LIBS) -L. -lsdb
+	@echo 'Finished building target: $@'
+
 # clean created files
 clean:
 	-rm -f $(OBJS) $(TESTS) $(TO_CLEAN) $(PROG)
@@ -74,3 +79,7 @@ clean:
 # run tests
 check:
 	./libsdb_check
+
+# run example
+example:
+	./libsdb_example

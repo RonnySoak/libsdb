@@ -120,8 +120,9 @@ void db_open(const char * filename) {
     if (filename) {
         fp = fopen(filename, "r");
         if (!fp) {
-            set_error(DB_NOT_FOUND);
-            return;
+//            set_error(DB_NOT_FOUND);
+//            return;
+            ffatal("Could not read DB");
         }
     }
     else {
@@ -224,8 +225,10 @@ void db_free() {
 
     if (seqdata)
         free(seqdata);
+    seqdata = 0;
     if (seqindex)
         free(seqindex);
+    seqindex = 0;
 }
 
 unsigned long db_getsequencecount() {

@@ -84,6 +84,11 @@ void sdb_init_out(const char* filename) {
 // ##############
 void sdb_init_fasta(const char* fasta_file_name) {
     db_open(fasta_file_name);
+//    sdb_error err = sdb_last_error();
+//    if(err) {
+//        printf("Error: %s\n", sdb_get_error_desc(err));
+//        return;
+//    }
 
     db_read();
 
