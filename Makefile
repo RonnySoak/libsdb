@@ -18,8 +18,8 @@ TO_CLEAN := libsdb.a
 MPI_COMPILE := `mpicxx --showme:compile`
 MPI_LINK := `mpicxx --showme:link`
 
-COMMON := -g
-#COMMON := -pg -g
+#COMMON := -g
+COMMON := -pg -g
 
 LIBS := -lpthread
 TEST_LIBS := -lcheck -lm -lrt
