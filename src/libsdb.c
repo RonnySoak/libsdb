@@ -10,17 +10,7 @@
 #include "util.h"
 #include "libsdb.h"
 #include "sdb_error.h"
-
-// #############################################################################
-// External defined functions
-// ##########################
-
-// in database.c
-extern void db_open(const char * filename);
-extern void db_read();
-extern unsigned long db_getsequencecount();
-extern p_seqinfo db_getseqinfo(unsigned long seqno);
-extern void db_free();
+#include "database.h"
 
 int seq_index;
 sdb_error last_error = 0;

@@ -10,21 +10,7 @@
 #include "../src/util.h"
 #include "../src/libsdb.h"
 #include "../src/sdb_error.h"
-
-extern void db_open(const char * filename);
-extern void db_read();
-extern unsigned long db_getsequencecount();
-extern unsigned long db_getnucleotidecount();
-extern unsigned long db_getlongestheader();
-extern unsigned long db_getlongestsequence();
-extern p_seqinfo db_getseqinfo(unsigned long seqno);
-extern char * db_getsequence(unsigned long seqno);
-extern void db_getsequenceandlength(unsigned long seqno, char ** address,
-        unsigned long * length);
-extern unsigned long db_getsequencelen(unsigned long seqno);
-extern char * db_getheader(unsigned long seqno);
-extern unsigned long db_getheaderlen(unsigned long seqno);
-extern void db_free();
+#include "../src/database.h"
 
 START_TEST (test_database_read)
     {

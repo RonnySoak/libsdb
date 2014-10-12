@@ -9,13 +9,10 @@
 
 #include "../src/util.h"
 #include "../src/libsdb.h"
-
-extern unsigned long db_getsequencecount();
+#include "../src/database.h"
 
 START_TEST (test_one_sequence)
     {
-        sdb_init_out(NULL);
-
         sdb_init_fasta("tests/testdata/one_seq.fas");
 
         p_seqinfo seq = sdb_next_sequence();
@@ -29,8 +26,6 @@ START_TEST (test_one_sequence)
 
 START_TEST (test_multiple_sequences_translated)
     {
-        sdb_init_out(NULL);
-
         sdb_init_fasta("tests/testdata/AF091148.fas");
 
         ck_assert_int_eq(1403, db_getsequencecount());

@@ -9,8 +9,7 @@
 
 #include "../src/util.h"
 #include "../src/libssa_extern_db.h"
-
-extern unsigned long db_getsequencecount();
+#include "../src/database.h"
 
 START_TEST (test_one_sequence)
     {

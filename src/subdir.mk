@@ -7,6 +7,7 @@ OBJS += \
 USER_OBJS += \
 ./src/util.h \
 ./src/libsdb.h \
+./src/database.h \
 ./src/sdb_error.h
 
 TO_CLEAN +=
