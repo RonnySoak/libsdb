@@ -27,6 +27,8 @@
 #include "util.h"
 #include "sdb_error.h"
 
+#include "database.h"
+
 static unsigned long sequences = 0;
 static unsigned long nucleotides = 0;
 static unsigned long longest = 0;
@@ -59,7 +61,7 @@ static inline void adjust_data_alloc(unsigned long* current,
 }
 
 static int create_index() {
-    seqindex = (p_seqinfo) xmalloc(sequences * sizeof(seqinfo));
+    seqindex = xmalloc(sequences * sizeof(seqinfo));
     if (!seqindex) {
         return -1;
     }
@@ -136,7 +138,7 @@ void db_open(const char * filename) {
 void db_read() {
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
-    seqdata = (char *) xmalloc(dataalloc);
+    seqdata = xmalloc(dataalloc);
     unsigned long datalen = 0;
 
     longest = 0;

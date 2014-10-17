@@ -53,7 +53,7 @@ START_TEST (test_multiple_sequences_translated)
 //
 //START_TEST (test_external_next_function)
 //    {
-//        external_test_sequences = (p_sdb_sequence*) xmalloc(
+//        external_test_sequences = xmalloc(
 //                3 * sizeof(sdb_sequence));
 //
 //        external_test_sequences[0]->info = 0;
