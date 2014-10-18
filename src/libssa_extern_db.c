@@ -32,12 +32,16 @@ void ssa_db_init_fasta(const char* fasta_file_name) {
 
     db_read();
 
-    seq_index = 0;
+    ssa_db_reset_sequence_counter();
 }
 
 // #############################################################################
 // Accessors
 // #########
+void ssa_db_reset_sequence_counter() {
+    seq_index = 0;
+}
+
 p_seqinfo ssa_db_get_sequence(unsigned long seqno) {
     return db_getseqinfo(seqno);
 }

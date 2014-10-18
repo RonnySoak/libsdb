@@ -56,7 +56,7 @@ static inline void adjust_data_alloc(unsigned long* current,
         unsigned long new_size) {
     while (new_size >= *current) {
         *current += MEMCHUNK;
-        seqdata = (char *) xrealloc(seqdata, *current);
+        seqdata = xrealloc(seqdata, *current);
     }
 }
 
