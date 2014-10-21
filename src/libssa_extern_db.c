@@ -42,6 +42,10 @@ void ssa_db_reset_sequence_counter() {
     seq_index = 0;
 }
 
+unsigned long ssa_db_get_sequence_count() {
+    return db_getsequencecount();
+}
+
 p_seqinfo ssa_db_get_sequence(unsigned long seqno) {
     return db_getseqinfo(seqno);
 }

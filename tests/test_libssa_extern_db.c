@@ -28,7 +28,7 @@ START_TEST (test_multiple_sequences)
     {
         ssa_db_init_fasta("tests/testdata/AF091148.fas");
 
-        ck_assert_int_eq(1403, db_getsequencecount());
+        ck_assert_int_eq(1403, ssa_db_get_sequence_count());
 
         // checks if it can read all sequences
         for (int i = 0; i < 1403; i++) {
@@ -37,6 +37,8 @@ START_TEST (test_multiple_sequences)
 
             ck_assert_int_eq(i, (int )ref_seq->ID);
         }
+
+        ck_assert_ptr_eq(NULL, ssa_db_next_sequence());
 
         // end reached?
         ck_assert_ptr_eq(NULL, ssa_db_next_sequence());
