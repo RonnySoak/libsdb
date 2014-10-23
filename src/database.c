@@ -253,6 +253,9 @@ unsigned long db_getlongestsequence() {
 }
 
 p_seqinfo db_getseqinfo(unsigned long seqno) {
+	if (seqno >= db_getsequencecount()) {
+		return NULL;
+	}
     return seqindex + seqno;
 }
 
