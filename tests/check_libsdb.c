@@ -15,6 +15,7 @@ Suite* libsdb_suite(void) {
     Suite *s = suite_create("libsdb");
 
     /* Core test case */
+    addUtilTC(s);
     addDatabaseTC(s);
     addLibSDBTC(s);
     addLibSSAExternDBTC(s);

@@ -10,6 +10,7 @@
 
 #include <check.h>
 
+void addUtilTC(Suite *s);
 void addDatabaseTC(Suite *s);
 void addLibSDBTC(Suite *s);
 void addLibSSAExternDBTC(Suite *s);

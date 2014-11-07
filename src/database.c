@@ -128,7 +128,7 @@ void db_open(const char * filename) {
         }
     }
     else {
-        fp = stdin;
+        ffatal("No database filename specified");
     }
 }
 

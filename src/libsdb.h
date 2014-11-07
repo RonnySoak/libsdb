@@ -10,6 +10,7 @@
 #ifndef LIBSDB_H_
 #define LIBSDB_H_
 
+#include "libssa_extern_db.h"
 /**
  * TODO
  *
@@ -19,16 +20,6 @@
 // #############################################################################
 // Data types
 // ##########
-
-typedef struct seqinfo {
-    char * header;
-    char * seq;
-    unsigned long ID;
-    unsigned long headerlen;
-    unsigned long seqlen;
-} seqinfo;
-
-typedef struct seqinfo* p_seqinfo;
 
 typedef enum sdb_error sdb_error;
 

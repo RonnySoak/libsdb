@@ -23,6 +23,10 @@
 *.hex
 
 #others
+*.gcda
+*.gcno
 /.cproject
 /.project
 /libsdb_check
+/libsdb_example
+/coverage_data

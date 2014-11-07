@@ -54,11 +54,6 @@ p_seqinfo ssa_db_get_sequence(unsigned long seqno) {
  * TODO doc
  */
 p_seqinfo ssa_db_next_sequence() {
-    if (seq_index >= db_getsequencecount()) {
-        // last sequence read
-        return NULL;
-    }
-
     return db_getseqinfo(seq_index++);
 }
 

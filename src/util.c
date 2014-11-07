@@ -80,29 +80,4 @@ void * xrealloc(void *ptr, size_t size) {
     return t;
 }
 
-/* Find the first occurrence of C in S or the final NUL byte.
- * TODO why do we use an own function instead of the buildin: strchrnul in string.h ???
- *
- * strchrnul is a GNU extension!
- * */
-char * xstrchrnul(char *s, int c) {
-    char * r = strchr(s, c); // returns the first occurrence of c in s
-
-    if (r)
-        return r;
-    else
-        return (char *) s + strlen(s); // returns the final NUL byte
-}
-
-///* Find the first occurrence of C in S or the final NUL byte.  */
-//char *
-//strchrnul (const char *s, int c_in)
-//{
-//  char c = c_in;
-//  while (*s && (*s != c))
-//    s++;
-//
-//  return (char *) s;
-//}
-
 #endif /* DATA_H_ */
