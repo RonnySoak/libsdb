@@ -20,11 +20,8 @@ COVERAGE_DIR = coverage_data
 MPI_COMPILE := `mpicxx --showme:compile`
 MPI_LINK := `mpicxx --showme:link`
 
-COMMON := --coverage
-
 LIBS := -lpthread
 TEST_LIBS := -lcheck -lm -lrt
-LINKFLAGS := 
 
 # Intel options
 #CXX := icpc
@@ -32,17 +29,16 @@ LINKFLAGS :=
 
 # GNU options
 CXX := gcc
-# -Wno-write-strings removes the `deprecated conversion from string constant to char*` warnings
-CXXFLAGS := -Wall -O0 -std=c99 -march=native $(COMMON)
+CXXFLAGS := -Wall -O0 -std=c99 -march=native --coverage
 
-PROG := init libsdb libsdb_check libsdb_example
+PROG := libsdb libsdb_check libsdb_example
 
 .SUFFIXES := .o .c
 
 %.o : %.c $(DEPS)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all : $(PROG)
+all : init $(PROG)
 
 init:
 	@echo 'Copying file libssa_extern_db.h'
@@ -51,31 +47,25 @@ init:
 #mpilibsdb.o : src/libsdb.cc $(OBJS) $(DEPS)
 #	$(CXX) $(CXXFLAGS) -DMPIlibsdb $(MPI_COMPILE) -c -o $@ src/libsdb.cc
 
-libsdb : $(OBJS) $(DEPS)
+libsdb : init $(OBJS) $(USR_OBJS) $(DEPS)
 	@echo 'Building target: $@'
-#	$(CXX) $(LINKFLAGS) -o $@ $(OBJS) $(LIBS)
 	ar -cvq libsdb.a $(DEPS) $(OBJS)
 	@echo 'Finished building target: $@'
 
-#mpilibsdb : mpilibsdb.o $(OBJS) $(DEPS)
-#	@echo 'Building target: $@'
-#	$(CXX) $(LINKFLAGS) -o $@ mpilibsdb.o $(OBJS) $(LIBS) $(MPI_LINK)
-#	@echo 'Finished building target: $@'
-
-libsdb_check : $(TESTS) $(OBJS) $(DEPS)
+libsdb_check : init libsdb $(TESTS)
 	@echo 'Building target: $@'
-	$(CXX) $(CXXFLAGS) $(LINKFLAGS) -o $@ $(OBJS) $(TESTS) $(TEST_LIBS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(TESTS) $(TEST_LIBS) $(LIBS)
 	@echo 'Finished building target: $@'
 
-libsdb_example : $(OBJS) $(DEPS)
+libsdb_example : init libsdb ./src/libsdb_example.o
 	@echo 'Building target: $@'
-	$(CXX) $(CXXFLAGS) $(LINKFLAGS) -o $@ ./src/libsdb_example.c $(LIBS) -L. -lsdb
+	$(CXX) $(CXXFLAGS) -o $@ ./src/libsdb_example.c $(LIBS) -L. -lsdb
 	@echo 'Finished building target: $@'
 
 
 # clean created files
 clean:
-	rm -f $(OBJS) $(TESTS) $(TO_CLEAN) $(PROG)
+	rm -f $(OBJS) $(TESTS) $(TO_CLEAN) $(PROG) gmon.out
 	rm -rf $(COVERAGE_DIR)
 	find . -type f -name '*.gcda' -print | xargs /bin/rm -f
 	find . -type f -name '*.gcno' -print | xargs /bin/rm -f

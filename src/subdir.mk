@@ -10,4 +10,5 @@ USER_OBJS += \
 ./src/database.h \
 ./src/sdb_error.h
 
-TO_CLEAN +=
+TO_CLEAN += \
+./src/libsdb_example.o
