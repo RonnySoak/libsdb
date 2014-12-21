@@ -29,7 +29,7 @@ TEST_LIBS := -lcheck -lm -lrt
 
 # GNU options
 CXX := gcc
-CXXFLAGS := -Wall -O0 -std=c99 -march=native --coverage
+CXXFLAGS := -Wall -O3 -std=c99 -march=native --coverage
 
 PROG := libsdb libsdb_check libsdb_example
 

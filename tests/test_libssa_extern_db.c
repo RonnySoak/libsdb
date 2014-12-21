@@ -58,7 +58,16 @@ START_TEST (test_get_sequence)
 		ck_assert_ptr_eq(NULL, ssa_db_get_sequence(5));
 
 		ssa_db_free();
-	}END_TEST
+    }END_TEST
+
+START_TEST (test_get_longest_sequence)
+    {
+        ssa_db_init_fasta( "tests/testdata/test.fas" );
+
+        ck_assert_int_eq( 232, ssa_db_get_longest_sequence() );
+
+        ssa_db_free();
+    }END_TEST
 
 START_TEST (test_reset_counter)
 	{
@@ -83,6 +92,7 @@ void addLibSSAExternDBTC(Suite *s) {
 	tcase_add_test(tc_core, test_one_sequence);
 	tcase_add_test(tc_core, test_multiple_sequences);
 	tcase_add_test(tc_core, test_get_sequence);
+    tcase_add_test(tc_core, test_get_longest_sequence);
 	tcase_add_test(tc_core, test_reset_counter);
 
 	suite_add_tcase(s, tc_core);

@@ -50,6 +50,10 @@ p_seqinfo ssa_db_get_sequence(unsigned long seqno) {
     return db_getseqinfo(seqno);
 }
 
+long ssa_db_get_longest_sequence() {
+    return db_getlongestsequence();
+}
+
 /**
  * TODO doc
  */
