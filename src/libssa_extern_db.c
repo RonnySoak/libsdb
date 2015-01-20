@@ -9,20 +9,14 @@
 
 #include "util.h"
 #include "libssa_extern_db.h"
+#include "database.h"
 #include "sdb_error.h"
 
 // #############################################################################
 // External defined functions
 // ##########################
 
-// in database.c
-extern void db_open(const char * filename);
-extern void db_read();
-extern unsigned long db_getsequencecount();
-extern p_seqinfo db_getseqinfo(unsigned long seqno);
-extern void db_free();
-
-int seq_index;
+static int seq_index;
 
 // #############################################################################
 // Initialisation

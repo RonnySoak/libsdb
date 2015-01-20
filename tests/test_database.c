@@ -57,6 +57,14 @@ START_TEST (test_database_seqinfo)
         ck_assert_int_eq(db_getheader(0), info->header);
         ck_assert_int_eq(db_getheaderlen(0), info->headerlen);
 
+        for( int i = 0; i < db_getsequencecount(); i++ ) {
+            for( int j = 0; j < db_getsequencecount(); j++ ) {
+                if( i != j ) {
+                    ck_assert_uint_ne( db_getseqinfo( i )->ID, db_getseqinfo( j )->ID );
+                }
+            }
+        }
+
         db_free();
     }END_TEST
 
