@@ -28,8 +28,10 @@ TEST_LIBS := -lcheck -lm -lrt
 #CXXFLAGS := -Wall -Wno-missing-declarations -fast -xSSE2 $(COMMON)
 
 # GNU options
+DEBUG_FLAGS := --coverage
+
 CXX := gcc
-CXXFLAGS := -Wall -O3 -std=c99 -march=native --coverage
+CXXFLAGS := -Wall -O3 -std=c99 -march=native $(DEBUG_FLAGS)
 
 PROG := libsdb libsdb_check libsdb_example
 
