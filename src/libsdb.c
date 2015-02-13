@@ -65,8 +65,8 @@ sdb_error sdb_last_error() {
 // #############################################################################
 // Technical initialisation
 // ########################
-void sdb_init_out(const char* filename) {
-    init_out(filename);
+void sdb_init_outfile(const char* filename) {
+    sdb_init_out(filename);
 }
 
 // #############################################################################
@@ -108,5 +108,5 @@ p_seqinfo sdb_next_sequence() {
 void sdb_free_db() {
     db_free();
 
-    close_out();
+    sdb_close_out();
 }

@@ -56,12 +56,12 @@ static inline void adjust_data_alloc(unsigned long* current,
         unsigned long new_size) {
     while (new_size >= *current) {
         *current += MEMCHUNK;
-        seqdata = xrealloc(seqdata, *current);
+        seqdata = sdb_xrealloc(seqdata, *current);
     }
 }
 
 static int create_index() {
-    seqindex = xmalloc(sequences * sizeof(seqinfo));
+    seqindex = sdb_xmalloc(sequences * sizeof(seqinfo));
     if (!seqindex) {
         return -1;
     }
@@ -91,7 +91,7 @@ static int read_header(char line[LINEALLOC],
         unsigned long * dataalloc, unsigned long * datalen) {
     /* read header */
     if (line[0] != '>') {
-        ffatal("Illegal header line in fasta file.");
+        sdb_ffatal("Illegal header line in fasta file.");
 //        set_error(DB_ILLEGAL_HEADER);
 //        return -1;
     }
@@ -124,11 +124,11 @@ void db_open(const char * filename) {
         if (!fp) {
 //            set_error(DB_NOT_FOUND);
 //            return;
-            ffatal("Could not read DB");
+            sdb_ffatal("Could not read DB");
         }
     }
     else {
-        ffatal("No database filename specified");
+        sdb_ffatal("No database filename specified");
     }
 }
 
@@ -138,7 +138,7 @@ void db_open(const char * filename) {
 void db_read() {
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
-    seqdata = xmalloc(dataalloc);
+    seqdata = sdb_xmalloc(dataalloc);
     unsigned long datalen = 0;
 
     longest = 0;
@@ -151,7 +151,7 @@ void db_read() {
     if ( NULL == fgets(line, LINEALLOC, fp)) {
 //        set_error(DB_LINE_NOT_READ);
 //        return;
-        ffatal("Could not read query sequence");
+        sdb_ffatal("Could not read query sequence");
     }
 
     while (line[0]) {
@@ -162,7 +162,7 @@ void db_read() {
         if ( NULL == fgets(line, LINEALLOC, fp)) {
 //            set_error(DB_LINE_NOT_READ);
 //            break;
-            ffatal("Could not read query sequence");
+            sdb_ffatal("Could not read query sequence");
         }
 
         /* read sequence */

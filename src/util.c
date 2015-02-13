@@ -5,9 +5,6 @@
  *      Author: Jakob Frielingsdorf
  */
 
-#ifndef DATA_H_
-#define DATA_H_
-
 #include <string.h>
 #include <stdarg.h>
 #include <mm_malloc.h>
@@ -17,24 +14,24 @@
 
 FILE* out_file;
 
-void ffatal(const char * format, ...) {
-    if (format) {
+void sdb_ffatal( const char * format, ... ) {
+    if( format ) {
         va_list arg;
-        fprintf(stderr, format, arg);
-        fprintf(stderr, "\n");
+        fprintf( stderr, format, arg );
+        fprintf( stderr, "\n" );
     }
-    exit(1);
+    exit( 1 );
 }
 
-void init_out(const char* filename) {
-    if (NULL == filename) {
+void sdb_init_out( const char* filename ) {
+    if( NULL == filename ) {
         out_file = stdout;
-        outf("Writing to stdout\n");
+        sdb_outf( "Writing to stdout\n" );
     }
     else {
-        FILE * f = fopen(filename, "w");
-        if (!f) {
-            ffatal("Unable to open output file for writing.");
+        FILE * f = fopen( filename, "w" );
+        if( !f ) {
+            sdb_ffatal( "Unable to open output file for writing." );
 //            set_error(OUT_FILE_NOT_FOUND);
             return;
         }
@@ -42,42 +39,42 @@ void init_out(const char* filename) {
     }
 }
 
-void close_out() {
-    if (out_file && (out_file != stdout)) {
-        if (fclose(out_file)) {
-            ffatal("Could not close output file.");
+void sdb_close_out() {
+    if( out_file && (out_file != stdout) ) {
+        if( fclose( out_file ) ) {
+            sdb_ffatal( "Could not close output file." );
 //            set_error(OUT_FILE_NOT_CLOSED);
         }
     }
 }
 
-void outf(const char* format, ...) {
-    if (!out_file) {
-        init_out(NULL);
+void sdb_outf( const char* format, ... ) {
+    if( !out_file ) {
+        sdb_init_out( NULL );
     }
 
-    va_list arg;
-    fprintf(out_file, format, arg);
+    va_list argptr;
+    va_start(argptr, format);
+    vfprintf(stdout, format, argptr);
+    va_end(argptr);
 }
 
-void * xmalloc(size_t size) {
+void * sdb_xmalloc( size_t size ) {
     const size_t alignment = 16;
     void * t;
-    if (posix_memalign(&t, alignment, size) != 0) {
-        ffatal("Unable to allocate enough memory.");
+    if( posix_memalign( &t, alignment, size ) != 0 ) {
+        sdb_ffatal( "Unable to allocate enough memory." );
 //        set_error(MALLOC_NOT_ENOUGH_MEM);
     }
 
     return t;
 }
 
-void * xrealloc(void *ptr, size_t size) {
-    void * t = realloc(ptr, size);
-    if (!t) {
-        ffatal("Unable to allocate enough memory.");
+void * sdb_xrealloc( void *ptr, size_t size ) {
+    void * t = realloc( ptr, size );
+    if( !t ) {
+        sdb_ffatal( "Unable to allocate enough memory." );
 //        set_error(REALLOC_NOT_ENOUGH_MEM);
     }
     return t;
 }
-
-#endif /* DATA_H_ */

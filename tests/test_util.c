@@ -12,14 +12,14 @@
 
 START_TEST (test_xmalloc)
     {
-        uint8_t * arr = xmalloc(5);
+        uint8_t * arr = sdb_xmalloc(5);
         for (int i = 0; i < 5; ++i) {
             arr[i] = 1;
         }
 
-        p_seqinfo * arr2 = xmalloc(5 * sizeof(p_seqinfo));
+        p_seqinfo * arr2 = sdb_xmalloc(5 * sizeof(p_seqinfo));
         for (int i = 0; i < 5; ++i) {
-            arr2[i] = xmalloc(sizeof(seqinfo));
+            arr2[i] = sdb_xmalloc(sizeof(seqinfo));
             arr2[i]->ID = i;
         }
 
@@ -33,16 +33,16 @@ START_TEST (test_xmalloc)
 
 START_TEST (test_xrealloc)
     {
-        p_seqinfo * arr = xmalloc(5 * sizeof(p_seqinfo));
+        p_seqinfo * arr = sdb_xmalloc(5 * sizeof(p_seqinfo));
         for (int i = 0; i < 5; ++i) {
-            arr[i] = xmalloc(sizeof(seqinfo));
+            arr[i] = sdb_xmalloc(sizeof(seqinfo));
             arr[i]->ID = i;
         }
 
-        arr = xrealloc(arr, 10 * sizeof(p_seqinfo));
+        arr = sdb_xrealloc(arr, 10 * sizeof(p_seqinfo));
         for (int i = 0; i < 10; ++i) {
             if(i >= 5) {
-                arr[i] = xmalloc(sizeof(seqinfo));
+                arr[i] = sdb_xmalloc(sizeof(seqinfo));
                 arr[i]->ID = i;
             }
         }

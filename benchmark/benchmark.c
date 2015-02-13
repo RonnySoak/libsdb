@@ -7,11 +7,18 @@
 
 #include <stdio.h>
 
-#include "libsdb.h"
+#include "../src/libsdb.h"
 
 int main(int argc, char**argv) {
-//    sdb_init_fasta("tests/testdata/test.fas");
-    sdb_init_fasta("tests/testdata/Rfam_11_0.fasta");
+    /*
+     * Using UniProtKB/Swiss-Prot database.
+     *
+     * Can be downloaded from here: http://www.uniprot.org/downloads
+     *
+     * Compile it with:
+     * gcc -O3 -o benchmark benchmark.c --coverage -L.. -lsdb TODO remove --coverage from libsdb to remove it here as well
+     */
+    sdb_init_fasta("uniprot_sprot.fasta");
 
     p_seqinfo info = sdb_next_sequence();
     long count = 0;

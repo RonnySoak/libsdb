@@ -63,5 +63,5 @@ p_seqinfo ssa_db_next_sequence() {
 void ssa_db_free() {
     db_free();
 
-    close_out();
+    sdb_close_out();
 }

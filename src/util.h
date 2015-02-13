@@ -17,17 +17,17 @@
 #define LINE_MAX 2048
 #endif
 
-void * xmalloc(size_t size);
-void * xrealloc(void *ptr, size_t size);
+void * sdb_xmalloc(size_t size);
+void * sdb_xrealloc(void *ptr, size_t size);
 
-void ffatal(const char * format, ...);
+void sdb_ffatal(const char * format, ...);
 
 /** Initialises the output stream. Default is stdout */
-void init_out(const char* filename);
+void sdb_init_out(const char* filename);
 /** Closes the file pointer to the output stream, if it is not stdout */
-void close_out();
+void sdb_close_out();
 /** Writes to the output stream */
-void outf(const char* format, ...);
+void sdb_outf(const char* format, ...);
 // output data
 
 char * xstrchrnul(char *s, int c);

@@ -39,7 +39,7 @@ sdb_error sdb_last_error();
 // #############################################################################
 // Technical initialisation
 // ########################
-void sdb_init_out(const char* filename);
+void sdb_init_outfile(const char* filename);
 
 // #############################################################################
 // Initialisation
