@@ -77,6 +77,7 @@ clean:
 check:
 	./libsdb_check
 
+# to use this, DEBUG_FLAGS have to be added to CXXFLAGS while compiling the sources
 coverage : $(OBJS) 
 	@echo Running tests
 	./libsdb_check

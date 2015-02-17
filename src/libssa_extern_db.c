@@ -13,46 +13,23 @@
 #include "sdb_error.h"
 
 // #############################################################################
-// External defined functions
-// ##########################
-
-static int seq_index;
-
-// #############################################################################
 // Initialisation
 // ##############
 void ssa_db_init_fasta(const char* fasta_file_name) {
     db_open(fasta_file_name);
 
     db_read();
-
-    ssa_db_reset_sequence_counter();
 }
 
 // #############################################################################
 // Accessors
 // #########
-void ssa_db_reset_sequence_counter() {
-    seq_index = 0;
-}
-
 unsigned long ssa_db_get_sequence_count() {
     return db_getsequencecount();
 }
 
 p_seqinfo ssa_db_get_sequence(unsigned long seqno) {
     return db_getseqinfo(seqno);
-}
-
-long ssa_db_get_longest_sequence() {
-    return db_getlongestsequence();
-}
-
-/**
- * TODO doc
- */
-p_seqinfo ssa_db_next_sequence() {
-    return db_getseqinfo(seq_index++);
 }
 
 /**

@@ -15,11 +15,11 @@ START_TEST (test_one_sequence)
 	{
 		ssa_db_init_fasta("tests/testdata/one_seq.fas");
 
-		p_seqinfo seq = ssa_db_next_sequence();
+		p_seqinfo seq = ssa_db_get_sequence( 0 );
 		ck_assert_str_eq("97485665bcded44c4d86c131ca714848", seq->header);
 		ck_assert_int_eq(54, seq->seqlen);
 
-		ck_assert_ptr_eq(NULL, ssa_db_next_sequence());
+		ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1 ) );
 
 		ssa_db_free();
 	}END_TEST
@@ -32,16 +32,16 @@ START_TEST (test_multiple_sequences)
 
 		// checks if it can read all sequences
 		for (int i = 0; i < 1403; i++) {
-			p_seqinfo ref_seq = ssa_db_next_sequence();
+			p_seqinfo ref_seq = ssa_db_get_sequence( i );
 			ck_assert_ptr_ne(NULL, ref_seq);
 
 			ck_assert_int_eq(i, (int )ref_seq->ID);
 		}
 
-		ck_assert_ptr_eq(NULL, ssa_db_next_sequence());
+		ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1403 ) );
 
 		// end reached?
-		ck_assert_ptr_eq(NULL, ssa_db_next_sequence());
+        ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1404 ) );
 
 		ssa_db_free();
 	}END_TEST
@@ -60,40 +60,11 @@ START_TEST (test_get_sequence)
 		ssa_db_free();
     }END_TEST
 
-START_TEST (test_get_longest_sequence)
-    {
-        ssa_db_init_fasta( "tests/testdata/test.fas" );
-
-        ck_assert_int_eq( 232, ssa_db_get_longest_sequence() );
-
-        ssa_db_free();
-    }END_TEST
-
-START_TEST (test_reset_counter)
-	{
-		ssa_db_init_fasta("tests/testdata/AF091148.fas");
-
-		p_seqinfo ref_seq = ssa_db_next_sequence();
-		ck_assert_int_eq(0, (int )ref_seq->ID);
-
-		ref_seq = ssa_db_next_sequence();
-		ck_assert_int_eq(1, (int )ref_seq->ID);
-
-		ssa_db_reset_sequence_counter();
-
-		ref_seq = ssa_db_next_sequence();
-		ck_assert_int_eq(0, (int )ref_seq->ID);
-
-		ssa_db_free();
-	}END_TEST
-
 void addLibSSAExternDBTC(Suite *s) {
 	TCase *tc_core = tcase_create("libssa_extern_db");
 	tcase_add_test(tc_core, test_one_sequence);
 	tcase_add_test(tc_core, test_multiple_sequences);
 	tcase_add_test(tc_core, test_get_sequence);
-    tcase_add_test(tc_core, test_get_longest_sequence);
-	tcase_add_test(tc_core, test_reset_counter);
 
 	suite_add_tcase(s, tc_core);
 }
