@@ -16,6 +16,10 @@
 // Initialisation
 // ##############
 void ssa_db_init_fasta(const char* fasta_file_name) {
+    if( ssa_db_get_sequence_count() > 0 ) {
+        db_free();
+    }
+
     db_open(fasta_file_name);
 
     db_read();

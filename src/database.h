@@ -8,7 +8,7 @@
 #ifndef DATABASE_H_
 #define DATABASE_H_
 
-void db_open(const char * filename);
+void db_open( const char * filename );
 
 /*
  * here we do not check for double sequence-headers
@@ -28,17 +28,16 @@ unsigned long db_getlongestheader();
  */
 unsigned long db_getlongestsequence();
 
-p_seqinfo db_getseqinfo(unsigned long seqno);
+p_seqinfo db_getseqinfo( unsigned long seqno );
 
-char * db_getsequence(unsigned long seqno);
+char * db_getsequence( unsigned long seqno );
 
-void db_getsequenceandlength(unsigned long seqno, char ** address,
-        unsigned long * length);
+void db_getsequenceandlength( unsigned long seqno, char ** address, unsigned long * length );
 
-unsigned long db_getsequencelen(unsigned long seqno);
+unsigned long db_getsequencelen( unsigned long seqno );
 
-char * db_getheader(unsigned long seqno);
+char * db_getheader( unsigned long seqno );
 
-unsigned long db_getheaderlen(unsigned long seqno);
+unsigned long db_getheaderlen( unsigned long seqno );
 
 #endif /* DATABASE_H_ */

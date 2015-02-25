@@ -52,32 +52,31 @@ static FILE * fp = NULL;
 /**
  * Adjusts the memory allocated for storing the sequence data.
  */
-static inline void adjust_data_alloc(unsigned long* current,
-        unsigned long new_size) {
-    while (new_size >= *current) {
+static inline void adjust_data_alloc( unsigned long* current, unsigned long new_size ) {
+    while( new_size >= *current ) {
         *current += MEMCHUNK;
-        seqdata = sdb_xrealloc(seqdata, *current);
+        seqdata = sdb_xrealloc( seqdata, *current );
     }
 }
 
 static int create_index() {
-    seqindex = sdb_xmalloc(sequences * sizeof(seqinfo));
-    if (!seqindex) {
+    seqindex = sdb_xmalloc( sequences * sizeof(seqinfo) );
+    if( !seqindex ) {
         return -1;
     }
     p_seqinfo seq_iterator = seqindex;
 
     char * data_iterator = seqdata;
-    for (unsigned long i = 0; i < sequences; i++) {
+    for( unsigned long i = 0; i < sequences; i++ ) {
         seq_iterator->header = data_iterator;
-        seq_iterator->headerlen = strlen(seq_iterator->header);
+        seq_iterator->headerlen = strlen( seq_iterator->header );
 
         data_iterator += seq_iterator->headerlen + 1;
 
         seq_iterator->ID = i;
 
         seq_iterator->seq = data_iterator;
-        seq_iterator->seqlen = strlen(data_iterator);
+        seq_iterator->seqlen = strlen( data_iterator );
 
         data_iterator += seq_iterator->seqlen + 1;
 
@@ -87,48 +86,47 @@ static int create_index() {
     return 0;
 }
 
-static int read_header(char line[LINEALLOC],
-        unsigned long * dataalloc, unsigned long * datalen) {
+static int read_header( char line[LINEALLOC], unsigned long * dataalloc, unsigned long * datalen ) {
     /* read header */
-    if (line[0] != '>') {
-        sdb_ffatal("Illegal header line in fasta file.");
+    if( line[0] != '>' ) {
+        sdb_ffatal( "Illegal header line in fasta file." );
 //        set_error(DB_ILLEGAL_HEADER);
 //        return -1;
     }
 
-    int headerlen = strlen(line);
+    int headerlen = strlen( line );
 
     // fgets stops at \n
-    if (line[headerlen - 1] == '\n') {
+    if( line[headerlen - 1] == '\n' ) {
         line[headerlen - 1] = 0;
         headerlen--;
     }
     headerlen--; // without the leading '>'
 
-    if (headerlen > longestheader)
+    if( headerlen > longestheader )
         longestheader = headerlen;
 
     /* store the header */
-    adjust_data_alloc(dataalloc, (*datalen + headerlen + 1));
+    adjust_data_alloc( dataalloc, (*datalen + headerlen + 1) );
 
-    memcpy(seqdata + *datalen, line + 1, headerlen);
+    memcpy( seqdata + *datalen, line + 1, headerlen );
     *(seqdata + *datalen + headerlen) = 0; // set NUL terminator
     *datalen += headerlen + 1;
 
     return 0;
 }
 
-void db_open(const char * filename) {
-    if (filename) {
-        fp = fopen(filename, "r");
-        if (!fp) {
+void db_open( const char * filename ) {
+    if( filename ) {
+        fp = fopen( filename, "r" );
+        if( !fp ) {
 //            set_error(DB_NOT_FOUND);
 //            return;
-            sdb_ffatal("Could not read DB");
+            sdb_ffatal( "Could not read DB" );
         }
     }
     else {
-        sdb_ffatal("No database filename specified");
+        sdb_ffatal( "No database filename specified" );
     }
 }
 
@@ -138,7 +136,7 @@ void db_open(const char * filename) {
 void db_read() {
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
-    seqdata = sdb_xmalloc(dataalloc);
+    seqdata = sdb_xmalloc( dataalloc );
     unsigned long datalen = 0;
 
     longest = 0;
@@ -148,21 +146,21 @@ void db_read() {
 
     char line[LINEALLOC];
     line[0] = 0;
-    if ( NULL == fgets(line, LINEALLOC, fp)) {
+    if( NULL == fgets( line, LINEALLOC, fp ) ) {
 //        set_error(DB_LINE_NOT_READ);
 //        return;
-        sdb_ffatal("Could not read query sequence");
+        sdb_ffatal( "Could not read query sequence" );
     }
 
-    while (line[0]) {
-        read_header(line, &dataalloc, &datalen);
+    while( line[0] ) {
+        read_header( line, &dataalloc, &datalen );
 
         /* get next line */
         line[0] = 0;
-        if ( NULL == fgets(line, LINEALLOC, fp)) {
+        if( NULL == fgets( line, LINEALLOC, fp ) ) {
 //            set_error(DB_LINE_NOT_READ);
 //            break;
-            sdb_ffatal("Could not read query sequence");
+            sdb_ffatal( "Could not read query sequence" );
         }
 
         /* read sequence */
@@ -170,15 +168,15 @@ void db_read() {
         unsigned long seqbegin = datalen;
 
         // reads until the next sequence header is found
-        while (line[0] && (line[0] != '>')) {
+        while( line[0] && (line[0] != '>') ) {
             char c;
             char * p = line;
-            while ((c = *p++)) {
+            while( (c = *p++) ) {
                 // check for illegal characters
-                if (c != '\n') {
+                if( c != '\n' ) {
                     // TODO add checking of illegal symbols
 
-                    adjust_data_alloc(&dataalloc, datalen);
+                    adjust_data_alloc( &dataalloc, datalen );
 
                     *(seqdata + datalen) = c;
                     datalen++;
@@ -194,18 +192,18 @@ void db_read() {
 
             /* get next line */
             line[0] = 0;
-            if ( NULL == fgets(line, LINEALLOC, fp)) {
+            if( NULL == fgets( line, LINEALLOC, fp ) ) {
                 break;
             }
         }
 
-        adjust_data_alloc(&dataalloc, datalen);
+        adjust_data_alloc( &dataalloc, datalen );
 
         unsigned long length = datalen - seqbegin;
 
         nucleotides += length;
 
-        if (length > longest)
+        if( length > longest )
             longest = length;
 
         *(seqdata + datalen) = 0; // set NUL terminator
@@ -216,20 +214,17 @@ void db_read() {
 
     /* create indices */
     create_index();
+
+    fclose( fp );
+    fp = NULL;
 }
 
 void db_free() {
-    if (fp) {
-        if (!fclose(fp)) {
-            set_error(DB_NOT_CLOSED);
-        }
-    }
-
-    if (seqdata)
-        free(seqdata);
+    if( seqdata )
+        free( seqdata );
     seqdata = 0;
-    if (seqindex)
-        free(seqindex);
+    if( seqindex )
+        free( seqindex );
     seqindex = 0;
 }
 
@@ -252,32 +247,31 @@ unsigned long db_getlongestsequence() {
     return longest;
 }
 
-p_seqinfo db_getseqinfo(unsigned long seqno) {
-	if (seqno >= db_getsequencecount()) {
-		return NULL;
-	}
+p_seqinfo db_getseqinfo( unsigned long seqno ) {
+    if( seqno >= db_getsequencecount() ) {
+        return NULL;
+    }
     return seqindex + seqno;
 }
 
-char * db_getsequence(unsigned long seqno) {
+char * db_getsequence( unsigned long seqno ) {
     return seqindex[seqno].seq;
 }
 
-void db_getsequenceandlength(unsigned long seqno, char ** address,
-        unsigned long * length) {
+void db_getsequenceandlength( unsigned long seqno, char ** address, unsigned long * length ) {
     *address = seqindex[seqno].seq;
     *length = (unsigned long) (seqindex[seqno].seqlen);
 }
 
-unsigned long db_getsequencelen(unsigned long seqno) {
+unsigned long db_getsequencelen( unsigned long seqno ) {
     return seqindex[seqno].seqlen;
 }
 
-char * db_getheader(unsigned long seqno) {
+char * db_getheader( unsigned long seqno ) {
     return seqindex[seqno].header;
 }
 
-unsigned long db_getheaderlen(unsigned long seqno) {
+unsigned long db_getheaderlen( unsigned long seqno ) {
     return seqindex[seqno].headerlen;
 }
 
