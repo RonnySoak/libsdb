@@ -13,7 +13,7 @@
 
 START_TEST (test_one_sequence)
 	{
-		ssa_db_init_fasta("tests/testdata/one_seq.fas");
+		ssa_db_init("tests/testdata/one_seq.fas");
 
 		p_seqinfo seq = ssa_db_get_sequence( 0 );
 		ck_assert_str_eq("97485665bcded44c4d86c131ca714848", seq->header);
@@ -21,12 +21,12 @@ START_TEST (test_one_sequence)
 
 		ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1 ) );
 
-		ssa_db_free();
+		ssa_db_close();
 	}END_TEST
 
 START_TEST (test_multiple_sequences)
 	{
-		ssa_db_init_fasta("tests/testdata/AF091148.fas");
+		ssa_db_init("tests/testdata/AF091148.fas");
 
 		ck_assert_int_eq(1403, ssa_db_get_sequence_count());
 
@@ -43,12 +43,12 @@ START_TEST (test_multiple_sequences)
 		// end reached?
         ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1404 ) );
 
-		ssa_db_free();
+		ssa_db_close();
 	}END_TEST
 
 START_TEST (test_get_sequence)
 	{
-		ssa_db_init_fasta("tests/testdata/test.fas");
+		ssa_db_init("tests/testdata/test.fas");
 
 		ck_assert_int_eq(5, ssa_db_get_sequence_count());
 
@@ -57,7 +57,7 @@ START_TEST (test_get_sequence)
 		ck_assert_int_eq(4, ssa_db_get_sequence(4)->ID);
 		ck_assert_ptr_eq(NULL, ssa_db_get_sequence(5));
 
-		ssa_db_free();
+		ssa_db_close();
     }END_TEST
 
 void addLibSSAExternDBTC(Suite *s) {
