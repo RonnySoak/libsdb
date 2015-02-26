@@ -16,7 +16,6 @@ START_TEST (test_one_sequence)
         sdb_init_fasta("tests/testdata/one_seq.fas");
 
         p_seqinfo seq = sdb_next_sequence();
-        ck_assert_str_eq("97485665bcded44c4d86c131ca714848", seq->header);
         ck_assert_int_eq(54, seq->seqlen);
 
         ck_assert_ptr_eq(NULL, sdb_next_sequence());
@@ -43,51 +42,6 @@ START_TEST (test_multiple_sequences_translated)
 
         sdb_free_db();
     }END_TEST
-//
-//    p_seqinfo* external_test_sequences;
-//int idx = 0;
-//
-//p_seqinfo test_external_next() {
-//    return external_test_sequences[idx++];
-//}
-//
-//START_TEST (test_external_next_function)
-//    {
-//        external_test_sequences = xmalloc(
-//                3 * sizeof(sdb_sequence));
-//
-//        external_test_sequences[0]->info = 0;
-//        external_test_sequences[0]->len = 5;
-//        external_test_sequences[0]->seq = "ATCGA";
-//        external_test_sequences[0]->strand = 0;
-//        external_test_sequences[0]->frame = 0;
-//
-//        external_test_sequences[0]->info = 0;
-//        external_test_sequences[0]->len = 4;
-//        external_test_sequences[0]->seq = "AAGC";
-//        external_test_sequences[0]->strand = 1;
-//        external_test_sequences[0]->frame = 0;
-//
-//        external_test_sequences[0]->info = 0;
-//        external_test_sequences[0]->len = 6;
-//        external_test_sequences[0]->seq = "AAGGCT";
-//        external_test_sequences[0]->strand = 0;
-//        external_test_sequences[0]->frame = 0;
-//
-//        sdb_init_out(NULL);
-//
-//        sdb_init_external(test_external_next);
-//
-//        // checks if it can read all sequences and its translations
-//        for (int i = 0; i < 3; i++) {
-//            ck_assert_ptr_eq(external_test_sequences[i], sdb_next_sequence());
-//        }
-//
-//        // end reached?
-//        ck_assert_ptr_eq(NULL, sdb_next_sequence());
-//
-//        sdb_free_db();
-//    }END_TEST
 
 void addLibSDBTC(Suite *s) {
     TCase *tc_core = tcase_create("libsdb");

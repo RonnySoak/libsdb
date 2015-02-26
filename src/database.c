@@ -32,7 +32,7 @@
 static unsigned long sequences = 0;
 static unsigned long nucleotides = 0;
 static unsigned long longest = 0;
-static unsigned long longestheader = 0;
+//static unsigned long longestheader = 0;
 
 /**
  * Stores the indices, where the data and header of the sequences in
@@ -60,7 +60,7 @@ static inline void adjust_data_alloc( unsigned long* current, unsigned long new_
 }
 
 static int create_index() {
-    seqindex = sdb_xmalloc( sequences * sizeof(seqinfo) );
+    seqindex = sdb_xmalloc( sequences * sizeof(struct seqinfo) );
     if( !seqindex ) {
         return -1;
     }
@@ -68,10 +68,10 @@ static int create_index() {
 
     char * data_iterator = seqdata;
     for( unsigned long i = 0; i < sequences; i++ ) {
-        seq_iterator->header = data_iterator;
-        seq_iterator->headerlen = strlen( seq_iterator->header );
+//        seq_iterator->header = data_iterator;
+//        seq_iterator->headerlen = strlen( seq_iterator->header );
 
-        data_iterator += seq_iterator->headerlen + 1;
+//        data_iterator += seq_iterator->headerlen + 1;
 
         seq_iterator->ID = i;
 
@@ -103,16 +103,15 @@ static int read_header( char line[LINEALLOC], unsigned long * dataalloc, unsigne
     }
     headerlen--; // without the leading '>'
 
-    if( headerlen > longestheader )
-        longestheader = headerlen;
+//    if( headerlen > longestheader )
+//        longestheader = headerlen;
 
     /* store the header */
-    adjust_data_alloc( dataalloc, (*datalen + headerlen + 1) );
-
-    memcpy( seqdata + *datalen, line + 1, headerlen );
-    *(seqdata + *datalen + headerlen) = 0; // set NUL terminator
-    *datalen += headerlen + 1;
-
+//    adjust_data_alloc( dataalloc, (*datalen + headerlen + 1) );
+//
+//    memcpy( seqdata + *datalen, line + 1, headerlen );
+//    *(seqdata + *datalen + headerlen) = 0; // set NUL terminator
+//    *datalen += headerlen + 1;
     return 0;
 }
 
@@ -140,7 +139,7 @@ void db_read() {
     unsigned long datalen = 0;
 
     longest = 0;
-    longestheader = 0;
+//    longestheader = 0;
     sequences = 0;
     nucleotides = 0;
 
@@ -236,9 +235,9 @@ unsigned long db_getnucleotidecount() {
     return nucleotides;
 }
 
-unsigned long db_getlongestheader() {
-    return longestheader;
-}
+//unsigned long db_getlongestheader() {
+//    return longestheader;
+//}
 
 /**
  * Returns the length of the longest sequence.
@@ -267,11 +266,11 @@ unsigned long db_getsequencelen( unsigned long seqno ) {
     return seqindex[seqno].seqlen;
 }
 
-char * db_getheader( unsigned long seqno ) {
-    return seqindex[seqno].header;
-}
-
-unsigned long db_getheaderlen( unsigned long seqno ) {
-    return seqindex[seqno].headerlen;
-}
+//char * db_getheader( unsigned long seqno ) {
+//    return seqindex[seqno].header;
+//}
+//
+//unsigned long db_getheaderlen( unsigned long seqno ) {
+//    return seqindex[seqno].headerlen;
+//}
 

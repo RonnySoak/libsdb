@@ -16,7 +16,6 @@ START_TEST (test_one_sequence)
 		ssa_db_init("tests/testdata/one_seq.fas");
 
 		p_seqinfo seq = ssa_db_get_sequence( 0 );
-		ck_assert_str_eq("97485665bcded44c4d86c131ca714848", seq->header);
 		ck_assert_int_eq(54, seq->seqlen);
 
 		ck_assert_ptr_eq(NULL, ssa_db_get_sequence( 1 ) );

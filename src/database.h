@@ -21,7 +21,7 @@ unsigned long db_getsequencecount();
 
 unsigned long db_getnucleotidecount();
 
-unsigned long db_getlongestheader();
+//unsigned long db_getlongestheader();
 
 /**
  * Returns the length of the longest sequence.
@@ -36,8 +36,8 @@ void db_getsequenceandlength( unsigned long seqno, char ** address, unsigned lon
 
 unsigned long db_getsequencelen( unsigned long seqno );
 
-char * db_getheader( unsigned long seqno );
-
-unsigned long db_getheaderlen( unsigned long seqno );
+//char * db_getheader( unsigned long seqno );
+//
+//unsigned long db_getheaderlen( unsigned long seqno );
 
 #endif /* DATABASE_H_ */
