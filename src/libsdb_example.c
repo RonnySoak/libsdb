@@ -7,24 +7,29 @@
 
 #include <stdio.h>
 
-#include "libsdb.h"
+#include "libssa_extern_db.h"
 
-int main(int argc, char**argv) {
+int main( int argc, char**argv ) {
 //    sdb_init_fasta("tests/testdata/test.fas");
-    sdb_init_fasta("tests/testdata/Rfam_11_0.fasta");
+//    ssa_db_init( "tests/testdata/Rfam_11_0.fasta" );
+    ssa_db_init( "tests/testdata/uniprot_sprot.fasta" );
 
-    p_seqinfo info = sdb_next_sequence();
-    long count = 0;
-    while (info) {
+    p_seqinfo info;
+
+    size_t seq_count = ssa_db_get_sequence_count();
+    size_t res_count = 0;
+    for( size_t i = 0; i < seq_count; ++i ) {
 //        printf("sequence: %ld - header: %s\n", info->ID, info->header);
 
-        info = sdb_next_sequence();
-        count++;
+        info = ssa_db_get_sequence( i );
+
+        res_count += info->seqlen;
     }
 
-    printf("Nr of sequences read: %ld\n", count);
+    printf( "Nr of sequences read: %ld\n", seq_count );
+    printf( "Nr of residues read: %ld\n", res_count );
 
-    sdb_free_db();
+    ssa_db_close();
 
     return 0;
 }

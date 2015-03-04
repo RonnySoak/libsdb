@@ -10,6 +10,7 @@
 
 #include <check.h>
 
+void addSdbErrorTC( Suite *s );
 void addUtilTC(Suite *s);
 void addDatabaseTC(Suite *s);
 void addLibSDBTC(Suite *s);

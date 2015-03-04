@@ -55,12 +55,12 @@ static FILE * fp = NULL;
 static inline void adjust_data_alloc( unsigned long* current, unsigned long new_size ) {
     while( new_size >= *current ) {
         *current += MEMCHUNK;
-        seqdata = sdb_xrealloc( seqdata, *current );
+        seqdata = sdb_realloc( seqdata, *current );
     }
 }
 
 static int create_index() {
-    seqindex = sdb_xmalloc( sequences * sizeof(struct seqinfo) );
+    seqindex = sdb_malloc( sequences * sizeof(struct seqinfo) );
     if( !seqindex ) {
         return -1;
     }
@@ -89,9 +89,8 @@ static int create_index() {
 static int read_header( char line[LINEALLOC], unsigned long * dataalloc, unsigned long * datalen ) {
     /* read header */
     if( line[0] != '>' ) {
-        sdb_ffatal( "Illegal header line in fasta file." );
-//        set_error(DB_ILLEGAL_HEADER);
-//        return -1;
+        sdb_add_error( DB_ILLEGAL_HEADER );
+        return 1;
     }
 
     int headerlen = strlen( line );
@@ -119,13 +118,13 @@ void db_open( const char * filename ) {
     if( filename ) {
         fp = fopen( filename, "r" );
         if( !fp ) {
-//            set_error(DB_NOT_FOUND);
-//            return;
-            sdb_ffatal( "Could not read DB" );
+            sdb_add_error( DB_NOT_FOUND );
+            return;
         }
     }
     else {
-        sdb_ffatal( "No database filename specified" );
+        sdb_add_error( DB_NOT_FOUND );
+        return;
     }
 }
 
@@ -133,9 +132,14 @@ void db_open( const char * filename ) {
  * here we do not check for double sequence-headers
  */
 void db_read() {
+    if( fp == NULL ) {
+        sdb_add_error( DB_NOT_OPEN );
+        return;
+    }
+
     /* allocate space */
     unsigned long dataalloc = MEMCHUNK;
-    seqdata = sdb_xmalloc( dataalloc );
+    seqdata = sdb_malloc( dataalloc );
     unsigned long datalen = 0;
 
     longest = 0;
@@ -146,20 +150,20 @@ void db_read() {
     char line[LINEALLOC];
     line[0] = 0;
     if( NULL == fgets( line, LINEALLOC, fp ) ) {
-//        set_error(DB_LINE_NOT_READ);
-//        return;
-        sdb_ffatal( "Could not read query sequence" );
+        sdb_add_error( DB_LINE_NOT_READ );
+        return;
     }
 
     while( line[0] ) {
-        read_header( line, &dataalloc, &datalen );
+        if( read_header( line, &dataalloc, &datalen ) ) {
+            return;
+        }
 
         /* get next line */
         line[0] = 0;
         if( NULL == fgets( line, LINEALLOC, fp ) ) {
-//            set_error(DB_LINE_NOT_READ);
-//            break;
-            sdb_ffatal( "Could not read query sequence" );
+            sdb_add_error( DB_LINE_NOT_READ );
+            break;
         }
 
         /* read sequence */

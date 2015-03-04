@@ -11,6 +11,7 @@
 #define LIBSDB_H_
 
 #include "libssa_extern_db.h"
+#include "sdb_error.h"
 /**
  * TODO
  *
@@ -21,7 +22,7 @@
 // Data types
 // ##########
 
-typedef enum sdb_error sdb_error;
+typedef sdb_error_code_t sdb_error;
 
 // #############################################################################
 // Constants
@@ -32,7 +33,6 @@ typedef enum sdb_error sdb_error;
 // #############################################################################
 // Error handling
 // ##############
-char* sdb_get_error_desc(sdb_error err);
 
 sdb_error sdb_last_error();
 

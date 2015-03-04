@@ -31,27 +31,6 @@ void set_error(sdb_error err) {
         last_error = err;
 }
 
-char* sdb_get_error_desc(sdb_error err) {
-    switch (err) {
-    case DB_NOT_FOUND:
-        return "Unable to open input data file";
-    case DB_NOT_CLOSED:
-        return "Unable to close input data file";
-    case DB_LINE_NOT_READ:
-        return "Could not read line";
-    case DB_ILLEGAL_HEADER:
-        return "Illegal header line";
-    case OUT_FILE_NOT_FOUND:
-        return "Unable to open output file for writing";
-    case OUT_FILE_NOT_CLOSED:
-        return "Could not close output file";
-    case MALLOC_NOT_ENOUGH_MEM:
-        return "Unable to allocate enough memory";
-    case REALLOC_NOT_ENOUGH_MEM:
-        return "Unable to reallocate enough memory";
-    }
-    return "No description found";
-}
 
 /**
  * Returns the last error and resets it.
@@ -60,13 +39,6 @@ sdb_error sdb_last_error() {
     sdb_error tmp = last_error;
     last_error = 0;
     return tmp;
-}
-
-// #############################################################################
-// Technical initialisation
-// ########################
-void sdb_init_outfile(const char* filename) {
-    sdb_init_out(filename);
 }
 
 // #############################################################################
@@ -107,6 +79,4 @@ p_seqinfo sdb_next_sequence() {
  */
 void sdb_free_db() {
     db_free();
-
-    sdb_close_out();
 }

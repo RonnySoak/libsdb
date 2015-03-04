@@ -21,6 +21,9 @@ void ssa_db_init( const char* db_name ) {
     }
 
     db_open( db_name );
+    if( sdb_has_errors() ) {
+
+    }
 
     db_read();
 }
@@ -43,6 +46,4 @@ p_seqinfo ssa_db_get_sequence( unsigned long seqno ) {
  */
 void ssa_db_close() {
     db_free();
-
-    sdb_close_out();
 }
