@@ -2,6 +2,8 @@
 
 # Makefile for libsdb
 
+LIBSSA_DIR = ../libssa
+
 # non compilable files, some targets depend on
 DEPS := Makefile
 # objects to compile
@@ -23,10 +25,6 @@ MPI_LINK := `mpicxx --showme:link`
 LIBS := -lpthread
 TEST_LIBS := -lcheck -lm -lrt
 
-# Intel options
-#CXX := icpc
-#CXXFLAGS := -Wall -Wno-missing-declarations -fast -xSSE2 $(COMMON)
-
 # GNU options
 #DEBUG_FLAGS := -g --coverage
 
@@ -44,10 +42,7 @@ all : init $(PROG)
 
 init:
 	@echo 'Copying file libssa_extern_db.h'
-	cp ../libssa/src/libssa_extern_db.h src/
-	
-#mpilibsdb.o : src/libsdb.cc $(OBJS) $(DEPS)
-#	$(CXX) $(CXXFLAGS) -DMPIlibsdb $(MPI_COMPILE) -c -o $@ src/libsdb.cc
+	cp $(LIBSSA_DIR)/src/libssa_extern_db.h src/
 
 libsdb : init $(OBJS) $(USR_OBJS) $(DEPS)
 	@echo 'Building target: $@'
@@ -63,7 +58,6 @@ libsdb_example : init libsdb ./src/libsdb_example.o
 	@echo 'Building target: $@'
 	$(CXX) $(CXXFLAGS) -o $@ ./src/libsdb_example.c $(LIBS) -L. -lsdb
 	@echo 'Finished building target: $@'
-
 
 # clean created files
 clean:
