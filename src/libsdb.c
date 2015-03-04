@@ -12,64 +12,30 @@
 #include "sdb_error.h"
 #include "database.h"
 
-int seq_index;
-sdb_error last_error = 0;
-
-// #############################################################################
-// Error handling
-// ##############
-/*
- * TODO Error handling is currently not used/only roughly implemented
- *
- * It has to be evaluated later
- */
-/**
- * Sets the last error, but does not override it, if there is already an error set
- */
-void set_error(sdb_error err) {
-    if (!last_error)
-        last_error = err;
+p_sdb_error_list sdb_get_errorlist() {
+    return sdb_get_error_list();
 }
 
+int sdb_init_fasta( const char* fasta_file_name ) {
+    db_open( fasta_file_name );
 
-/**
- * Returns the last error and resets it.
- */
-sdb_error sdb_last_error() {
-    sdb_error tmp = last_error;
-    last_error = 0;
-    return tmp;
-}
-
-// #############################################################################
-// Initialisation
-// ##############
-void sdb_init_fasta(const char* fasta_file_name) {
-    db_open(fasta_file_name);
-//    sdb_error err = sdb_last_error();
-//    if(err) {
-//        printf("Error: %s\n", sdb_get_error_desc(err));
-//        return;
-//    }
-
-    db_read();
-
-    seq_index = 0;
-}
-
-// #############################################################################
-// Accessors
-// #########
-/**
- * TODO doc
- */
-p_seqinfo sdb_next_sequence() {
-    if (seq_index >= db_getsequencecount()) {
-        // last sequence read
-        return NULL;
+    if( sdb_has_errors() ) {
+        return SDB_ERROR;
     }
 
-    return db_getseqinfo(seq_index++);
+    db_read();
+    if( sdb_has_errors() ) {
+        return SDB_ERROR;
+    }
+    return SDB_OK;
+}
+
+p_seqinfo sdb_get_sequence( size_t id ) {
+    return db_getseqinfo( id );
+}
+
+unsigned long sdb_get_sequence_count() {
+    return db_getsequencecount();
 }
 
 /**
@@ -77,6 +43,6 @@ p_seqinfo sdb_next_sequence() {
  *
  * @see sdb_init_fasta
  */
-void sdb_free_db() {
+void sdb_close() {
     db_free();
 }

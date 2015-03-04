@@ -12,8 +12,6 @@
 #include "util.h"
 #include "sdb_error.h"
 
-FILE* out_file;
-
 void * sdb_malloc( size_t size ) {
     const size_t alignment = 16;
     void * t;

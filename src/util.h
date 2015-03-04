@@ -13,10 +13,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifndef LINE_MAX
-#define LINE_MAX 2048
-#endif
-
 void * sdb_malloc(size_t size);
 void * sdb_realloc(void *ptr, size_t size);
 

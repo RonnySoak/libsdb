@@ -26,7 +26,7 @@ typedef struct seqinfo * p_seqinfo;
 // #############################################################################
 // Initialisation
 // ##############
-void ssa_db_init( const char * db_name );
+int ssa_db_init( const char * db_name );
 
 // #############################################################################
 // Accessors

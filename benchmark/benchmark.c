@@ -31,7 +31,7 @@ int main(int argc, char**argv) {
 
     printf("Nr of sequences read: %ld\n", count);
 
-    sdb_free_db();
+    sdb_close();
 
     return 0;
 }

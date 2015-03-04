@@ -12,56 +12,33 @@
 
 #include "libssa_extern_db.h"
 #include "sdb_error.h"
-/**
- * TODO
- *
- * add functions, to get chunks of the DB
- */
+
+#define SDB_OK 0
+#define SDB_ERROR 1
 
 // #############################################################################
 // Data types
 // ##########
 
-typedef sdb_error_code_t sdb_error;
+typedef struct sdb_error_list * p_sdb_error_list;
+
+p_sdb_error_list sdb_get_errorlist();
 
 // #############################################################################
-// Constants
-// #########
-#define VERBOSE_ON 1 // TODO
-#define VERBOSE_OFF 0
+int sdb_init_fasta(const char* fasta_file_name);
 
-// #############################################################################
-// Error handling
-// ##############
+unsigned long sdb_get_sequence_count();
 
-sdb_error sdb_last_error();
-
-// #############################################################################
-// Technical initialisation
-// ########################
-void sdb_init_outfile(const char* filename);
-
-// #############################################################################
-// Initialisation
-// ##############
-void sdb_init_fasta(const char* fasta_file_name);
-
-// #############################################################################
-// Accessors
-// #########
 /**
- * Returns the next sequence available in the database.
- *
- * TODO better to copy the data to a new instance, to prevent alteration of the
- *      DB from the outside
+ * Returns the DB sequence of the specified ID.
  */
-p_seqinfo sdb_next_sequence();
+p_seqinfo sdb_get_sequence( size_t id );
 
 /**
  * Releases the memory allocated by the function sdb_init_fasta.
  *
  * @see sdb_init_fasta
  */
-void sdb_free_db();
+void sdb_close();
 
 #endif /* LIBSDB_H_ */

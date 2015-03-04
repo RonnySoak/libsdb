@@ -7,25 +7,28 @@
  *      Author: Jakob Frielingsdorf
  */
 
-#include "util.h"
 #include "libssa_extern_db.h"
+
+#include "libsdb.h"
+#include "util.h"
 #include "database.h"
 #include "sdb_error.h"
 
 // #############################################################################
 // Initialisation
 // ##############
-void ssa_db_init( const char* db_name ) {
-    if( ssa_db_get_sequence_count() > 0 ) {
-        db_free();
-    }
-
+int ssa_db_init( const char* db_name ) {
     db_open( db_name );
-    if( sdb_has_errors() ) {
 
+    if( sdb_has_errors() ) {
+        return SDB_ERROR;
     }
 
     db_read();
+    if( sdb_has_errors() ) {
+        return SDB_ERROR;
+    }
+    return SDB_OK;
 }
 
 // #############################################################################

@@ -29,6 +29,10 @@
 
 #include "database.h"
 
+#ifndef LINE_MAX
+#define LINE_MAX 2048
+#endif
+
 static unsigned long sequences = 0;
 static unsigned long nucleotides = 0;
 static unsigned long longest = 0;
