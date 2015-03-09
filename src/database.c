@@ -64,7 +64,7 @@ static inline void adjust_data_alloc( unsigned long* current, unsigned long new_
 }
 
 static int create_index() {
-    seqindex = sdb_malloc( sequences * sizeof(struct seqinfo) );
+    seqindex = sdb_malloc( sequences * sizeof(seqinfo_t) );
     if( !seqindex ) {
         return -1;
     }

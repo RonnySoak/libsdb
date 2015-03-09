@@ -21,7 +21,7 @@ START_TEST (test_xmalloc)
 
         p_seqinfo * arr2 = sdb_malloc( 5 * sizeof(p_seqinfo) );
         for( int i = 0; i < 5; ++i ) {
-            arr2[i] = sdb_malloc( sizeof(struct seqinfo) );
+            arr2[i] = sdb_malloc( sizeof(seqinfo_t) );
             arr2[i]->ID = i;
         }
 
@@ -54,14 +54,14 @@ START_TEST (test_xrealloc)
     {
         p_seqinfo * arr = sdb_malloc( 5 * sizeof(p_seqinfo) );
         for( int i = 0; i < 5; ++i ) {
-            arr[i] = sdb_malloc( sizeof(struct seqinfo) );
+            arr[i] = sdb_malloc( sizeof(seqinfo_t) );
             arr[i]->ID = i;
         }
 
         arr = sdb_realloc( arr, 10 * sizeof(p_seqinfo) );
         for( int i = 0; i < 10; ++i ) {
             if( i >= 5 ) {
-                arr[i] = sdb_malloc( sizeof(struct seqinfo) );
+                arr[i] = sdb_malloc( sizeof(seqinfo_t) );
                 arr[i]->ID = i;
             }
         }
