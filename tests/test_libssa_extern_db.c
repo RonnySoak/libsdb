@@ -7,9 +7,7 @@
 
 #include "tests.h"
 
-#include "../src/util.h"
 #include "../src/libssa_extern_db.h"
-#include "../src/database.h"
 
 START_TEST (test_one_sequence)
 	{
