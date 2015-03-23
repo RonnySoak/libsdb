@@ -33,8 +33,17 @@
 #define LINE_MAX 2048
 #endif
 
+/*
+ * This can used, to read only the first x sequences with a total of MAX_READ_RESIDUES
+ * amount of residues.
+ *
+ * This can be used, to test the library with large databases on system with to
+ * little memory, to hold the whole database.
+ */
+#define MAX_READ_RESIDUES 4000000000
+
 static unsigned long sequences = 0;
-static unsigned long nucleotides = 0;
+static unsigned long residues = 0;
 static unsigned long longest = 0;
 //static unsigned long longestheader = 0;
 
@@ -149,7 +158,7 @@ void db_read() {
     longest = 0;
 //    longestheader = 0;
     sequences = 0;
-    nucleotides = 0;
+    residues = 0;
 
     char line[LINEALLOC];
     line[0] = 0;
@@ -158,7 +167,7 @@ void db_read() {
         return;
     }
 
-    while( line[0] ) {
+    while( line[0] && (residues < MAX_READ_RESIDUES)  ) {
         if( read_header( line, &dataalloc, &datalen ) ) {
             return;
         }
@@ -208,7 +217,7 @@ void db_read() {
 
         unsigned long length = datalen - seqbegin;
 
-        nucleotides += length;
+        residues += length;
 
         if( length > longest )
             longest = length;
@@ -240,7 +249,7 @@ unsigned long db_getsequencecount() {
 }
 
 unsigned long db_getnucleotidecount() {
-    return nucleotides;
+    return residues;
 }
 
 //unsigned long db_getlongestheader() {

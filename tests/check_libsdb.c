@@ -5,9 +5,10 @@
  *      Author: kaos
  */
 
-#include <stdlib.h>
-
 #include "tests.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "../src/libsdb.h"
 
@@ -25,6 +26,9 @@ Suite* libsdb_suite( void ) {
 }
 
 int main( void ) {
+    printf( "Using Check unit testing framework version %d.%d.%d\n", CHECK_MAJOR_VERSION, CHECK_MINOR_VERSION,
+            CHECK_MICRO_VERSION );
+
     int number_failed;
     Suite *s = libsdb_suite();
     SRunner *sr = srunner_create( s );
