@@ -33,7 +33,7 @@ int main( int argc, char**argv ) {
     run_example( "tests/testdata/uniprot_sprot.fasta" );
     run_example( "tests/testdata/Rfam_11_0.fasta" );
 
-    run_example( "../uniprot_trembl.fasta" );
+//    run_example( "../uniprot_trembl.fasta" );
 
     return 0;
 }

@@ -6,10 +6,16 @@
  */
 
 /*
- * we store the sequences in ASCII code instead of the mapped values
+ * Reads a database in FASTA format and stores it in memory.
  *
- * stores headers and sequences in memory, as they are in the file
+ * This implementation stores only the sequences and lengths. The headers are omitted.
  *
+ * This implementation was taken from the SWARM project:
+ * https://github.com/torognes/swarm/blob/master/src/db.cc
+ */
+
+
+/*
  * TODO
  * doc
  *
