@@ -20,8 +20,6 @@
 // Data types
 // ##########
 
-typedef struct sdb_error_list * p_sdb_error_list;
-
 p_sdb_error_list sdb_get_errorlist();
 
 // #############################################################################

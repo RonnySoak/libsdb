@@ -9,7 +9,6 @@
 
 #include "../src/util.h"
 #include "../src/libsdb.h"
-#include "../src/sdb_error.h"
 #include "../src/database.h"
 
 START_TEST (test_database_read)

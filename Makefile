@@ -19,9 +19,6 @@ COVERAGE_DIR = coverage_data
 -include tests/subdir.mk
 -include src/subdir.mk
 
-MPI_COMPILE := `mpicxx --showme:compile`
-MPI_LINK := `mpicxx --showme:link`
-
 LIBS := -lpthread
 TEST_LIBS := -lcheck -lm -lrt
 
